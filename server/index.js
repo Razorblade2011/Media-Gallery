@@ -20,7 +20,7 @@ app.use(
     origin: process.env.CLIENT_URL,
   })
 )
-app.use('/api/user', router)
+app.use('/api/users', router)
 app.use(errorMiddleware)
 
 const start = async () => {

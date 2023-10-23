@@ -1,0 +1,24 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 100vw;
+  main {
+    padding: 10px;
+    flex-grow: 1;
+  }
+  footer {
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+  }
+}
+
+$background-color-navbar: rgb(8, 114, 106);
+$background-color-navbar-hover-link: rgb(15, 96, 125);
+$background-color-navbar-active-link: rgb(42, 95, 156);

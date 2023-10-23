@@ -1,0 +1,12 @@
+a {
+  text-decoration: none;
+  padding: 20px;
+  color: white;
+  text-transform: uppercase;
+  &:hover {
+    background-color: $background-color-navbar-hover-link;
+  }
+  &.active {
+    background-color: $background-color-navbar-active-link;
+  }
+}
