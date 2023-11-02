@@ -3,25 +3,34 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { config } from 'dotenv'
 import mongoose from 'mongoose'
-import router from './routes/user.route.js'
+import userRouter from './routes/user.route.js'
 import errorMiddleware from './middlewares/errorMiddleware.js'
+import mediaRouter from './routes/media.route.js'
+import fileUpload from 'express-fileupload'
 
 config()
 
 const PORT = process.env.PORT || 5000
+const ROOT_DIR = process.cwd()
 
 const app = express()
 
-app.use(express.json())
-app.use(cookieParser())
+app.use(express.static(ROOT_DIR + '/upload')) // выдаче статики сервером (для файлов)
+
+app.use(fileUpload({})) // middleware загрузки файлов
+
+// cors с настройками общения с клиентом
 app.use(
   cors({
     credentials: true,
     origin: process.env.CLIENT_URL,
   })
 )
-app.use('/api/users', router)
-app.use(errorMiddleware)
+app.use(express.json()) // json парсер запросов и ответов
+app.use(cookieParser()) // для работы с cookie
+app.use('/api/users', userRouter) // роутер пользователей
+app.use('/api/media', mediaRouter) // роутер файлов
+app.use(errorMiddleware) // middleware обработки ошибок
 
 const start = async () => {
   try {

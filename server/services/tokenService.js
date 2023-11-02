@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken'
-import TokenModel from '../models/TokenModel.js'
+import { TokenModel } from '../models/TokenModel.js'
 
 class TokenService {
+  // возвращает пару токенов
   generateTokens(payload) {
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
       expiresIn: '2h',
@@ -11,6 +12,8 @@ class TokenService {
     })
     return { accessToken, refreshToken }
   }
+
+  // сохраняет refreshToken в бд
   async saveToken(userId, refreshToken) {
     const tokenData = await TokenModel.findOne({ user: userId })
     if (tokenData) {
@@ -20,6 +23,8 @@ class TokenService {
     const token = await TokenModel.create({ user: userId, refreshToken })
     return token
   }
+
+  // проверяет accessToken токен на валидность
   validateAccessToken(token) {
     try {
       const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
@@ -28,6 +33,8 @@ class TokenService {
       return null
     }
   }
+
+  // проверяет refreshToken токен на валидность
   validateRefreshToken(token) {
     try {
       const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
@@ -36,10 +43,14 @@ class TokenService {
       return null
     }
   }
+
+  // удаляет refreshToken
   async removeToken(refreshToken) {
     const tokenData = await TokenModel.deleteOne({ refreshToken })
     return tokenData
   }
+
+  // возвращает refreshToken
   async findToken(refreshToken) {
     const tokenData = await TokenModel.findOne({ refreshToken })
     return tokenData

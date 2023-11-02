@@ -1,10 +1,11 @@
-import UserModel from '../models/UserModel.js'
+import { UserModel } from '../models/UserModel.js'
 import bcrypt from 'bcrypt'
 import tokenService from './tokenService.js'
 import { UserDto } from '../dtos/userDto.js'
 import ApiError from '../exceptions/apiError.js'
 
 class UserService {
+  // регистрирует нового пользователя
   async register(email, password) {
     const candidate = await UserModel.findOne({ email })
     if (candidate) {
@@ -24,6 +25,8 @@ class UserService {
       user: userDto,
     }
   }
+
+  // вход пользователя в систему
   async login(email, password) {
     const user = await UserModel.findOne({ email })
     if (!user) {
@@ -41,6 +44,8 @@ class UserService {
       user: userDto,
     }
   }
+
+  // выход пользователя из системы
   async logout(refreshToken) {
     const token = await tokenService.removeToken(refreshToken)
     return token
@@ -65,9 +70,34 @@ class UserService {
       user: userDto,
     }
   }
-  async getAllUsers() {
-    const users = await UserModel.find()
-    return users
+
+  // возвращает информацию о пользователе из бд
+  async getUser(id) {
+    return await UserModel.findById(id)
+  }
+
+  // добавляет информацию о файле пользователю
+  async addMediaToUser(userId, mediaId) {
+    return UserModel.findByIdAndUpdate(userId, {
+      $addToSet: { files: mediaId },
+    })
+  }
+
+  // добавляет информацию о файлах пользователю
+  async addMediaFilesToUser(userId, mediaIds) {
+    return UserModel.findByIdAndUpdate(userId, {
+      $addToSet: { files: { $in: mediaIds } },
+    })
+  }
+  // удаляет информацию о файле у пользователя
+  async removeMediaFromUser(userId, mediaId) {
+    return UserModel.updateOne({ _id: userId }, { $pull: { files: mediaId } })
+  }
+  // удаляет информацию о файлах у пользователя
+  async removeMediaFilesFromUser(userId, mediaIds) {
+    return UserModel.findByIdAndUpdate(userId, {
+      $pull: { files: { $in: mediaIds } },
+    })
   }
 }
 

@@ -1,3 +1,4 @@
+// класс с обработкой ошибок
 export default class ApiError extends Error {
   status
   errors

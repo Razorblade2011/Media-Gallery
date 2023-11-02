@@ -1,6 +1,7 @@
 import ApiError from '../exceptions/apiError.js'
 import tokenService from '../services/tokenService.js'
 
+// middleware для проверки авторизации пользователя
 const authMiddleware = (req, res, next) => {
   try {
     const authorizationHeader = req.headers.authorization

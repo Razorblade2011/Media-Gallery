@@ -26,4 +26,4 @@
 
 /server/.env
 /server/node_modules
-/sever/upload
+/server/upload

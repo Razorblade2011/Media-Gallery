@@ -1,5 +1,6 @@
 import ApiError from '../exceptions/apiError.js'
 
+// middleware для обработки ошибок
 const errorMiddleware = (err, req, res, next) => {
   console.log(err)
   if (err instanceof ApiError) {
