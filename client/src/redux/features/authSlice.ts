@@ -1,19 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import AuthService from '../../services/AuthService'
-import { IUser } from '../../models/response/IUser'
+import { UserData, UserI } from '../types'
 
 interface InitialState {
   isAuth: boolean
-  user: IUser | {}
+  user: UserI
   loading: boolean
   error: string
   showRegistraion: boolean
   showAvatarMenu: boolean
-}
-
-interface UserData {
-  email: string
-  password: string
 }
 
 interface ErrorAxios {
@@ -26,7 +21,7 @@ interface ErrorAxios {
 
 const initialState: InitialState = {
   isAuth: false,
-  user: {},
+  user: { email: '', id: '' },
   loading: false,
   error: '',
   showRegistraion: false,
@@ -74,7 +69,7 @@ export const logout = createAsyncThunk(
     try {
       return await AuthService.logout()
     } catch (e) {
-      return rejectWithValue((e as ErrorAxios).response.data.message)
+      return rejectWithValue(e as ErrorAxios)
     }
   }
 )
@@ -87,7 +82,7 @@ export const checkAuth = createAsyncThunk(
       localStorage.setItem('token', response.data.accessToken)
       return response
     } catch (e) {
-      return rejectWithValue((e as ErrorAxios).response.data.message)
+      return rejectWithValue(e as ErrorAxios)
     }
   }
 )
@@ -120,7 +115,7 @@ export const auth = createSlice({
       .addCase(registerUser.pending, (state) => {
         state.loading = true
       })
-      .addCase(registerUser.fulfilled, (state, { payload }) => {
+      .addCase(registerUser.fulfilled, (state, { payload }: any) => {
         state.loading = false
         state.user = payload.data
         state.error = ''
@@ -130,7 +125,7 @@ export const auth = createSlice({
         registerUser.rejected,
         (state, { payload }: { payload: any }) => {
           state.loading = false
-          state.user = {}
+          state.user = { email: '', id: '' }
           state.error = payload
         }
       )
@@ -145,8 +140,8 @@ export const auth = createSlice({
       })
       .addCase(loginUser.rejected, (state, { payload }: { payload: any }) => {
         state.loading = false
-        state.user = {}
-        state.error = payload
+        state.user = { email: '', id: '' }
+        state.error = payload.response.data.message
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.isAuth = false
@@ -159,8 +154,9 @@ export const auth = createSlice({
         state.user = payload.data.user
         state.loading = false
       })
-      .addCase(checkAuth.rejected, (state) => {
+      .addCase(checkAuth.rejected, (state, { payload }: any) => {
         state.isAuth = false
+        state.error = payload.response.data.message
       })
       .addCase(logout.pending, (state) => {
         state.loading = true
@@ -168,11 +164,11 @@ export const auth = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.loading = false
         state.isAuth = false
-        state.user = {}
+        state.user = { email: '', id: '' }
       })
       .addCase(logout.rejected, (state, { payload }: any) => {
         state.loading = false
-        state.error = payload
+        state.error = payload.response.data.message
       })
   },
 })

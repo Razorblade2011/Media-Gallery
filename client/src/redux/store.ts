@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './features/authSlice'
-// import galleryReducer from "./features/gallerySlice"
-// import uploadReducer from "./features/uploadSlice"
+import galleryReducer from './features/gallerySlice'
+import uploadReducer from './features/uploadSlice'
 
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
@@ -10,6 +10,8 @@ export const store = configureStore({
     }),
   reducer: {
     authReducer,
+    galleryReducer,
+    uploadReducer,
   },
 })
 

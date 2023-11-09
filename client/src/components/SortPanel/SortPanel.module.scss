@@ -1,0 +1,44 @@
+.sortpanel {
+  display: flex;
+  padding: 10px;
+  .bodySection {
+    color: white;
+    background-color: rgb(14, 127, 135);
+    padding: 10px;
+    border-radius: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    div {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      .buttons {
+        display: flex;
+        gap: 0;
+        button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 5px;
+          &.active {
+            background-color: green;
+          }
+          &:hover {
+            background-color: red;
+          }
+          &:nth-child(odd) {
+            border-bottom-left-radius: 10px;
+            border-top-left-radius: 10px;
+          }
+          &:nth-child(even) {
+            border-bottom-right-radius: 10px;
+            border-top-right-radius: 10px;
+          }
+        }
+      }
+    }
+  }
+}

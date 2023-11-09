@@ -1,0 +1,48 @@
+.containerStyles {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 20;
+  height: 20px;
+  width: 45%;
+  background-color: #e0e0de;
+  border-radius: 50px;
+  margin: 20px;
+  margin-left: auto;
+  .fillerStyles {
+    height: 100%;
+    background-color: $background-color-upload-progress-line;
+    border-radius: 'inherit';
+    text-align: 'right';
+    .labelStyles {
+      padding: 5;
+      color: 'white';
+      font-weight: 'bold';
+    }
+  }
+}
+.doneMessage {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  animation: complete 6s 1;
+  animation-iteration-count: infinite;
+}
+
+@keyframes complete {
+  0% {
+    color: black;
+  }
+  25% {
+    color: white;
+  }
+  50% {
+    color: rgb(20, 153, 91);
+  }
+  75% {
+    color: rgb(197, 186, 24);
+  }
+  100% {
+    color: rgb(156, 21, 84);
+  }
+}

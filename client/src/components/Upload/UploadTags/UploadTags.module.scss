@@ -1,0 +1,48 @@
+.uploadtags {
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  .inputZone {
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    .tagsFromDb {
+      position: absolute;
+      top: calc(100% + 0.2rem);
+      background-color: green;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      max-height: 10rem;
+      overflow-x: hidden;
+      overflow-y: auto;
+      & > div {
+        cursor: pointer;
+        padding: 5px;
+        &:hover {
+          background-color: blue;
+        }
+      }
+    }
+  }
+  .uploadTagsPreview {
+    display: flex;
+    flex-grow: 1;
+    gap: 10px;
+
+    & > div {
+      color: white;
+      background-color: green;
+      padding: 5px;
+      border-radius: 10px;
+      border: 1px solid black;
+      cursor: pointer;
+      &:hover {
+        background-color: red;
+      }
+    }
+  }
+}

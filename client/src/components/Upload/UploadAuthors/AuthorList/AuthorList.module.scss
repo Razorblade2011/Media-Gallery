@@ -1,0 +1,20 @@
+.authorlist {
+  position: relative;
+  .inputArea {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+  }
+  .list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    .author {
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 10px;
+      color: white;
+      background-color: darkolivegreen;
+    }
+  }
+}

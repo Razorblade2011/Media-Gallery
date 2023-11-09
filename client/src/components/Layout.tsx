@@ -10,7 +10,7 @@ const Layout = () => {
       <main>
         <Outlet />
       </main>
-      <footer>2023</footer>
+      <footer>Copyright © 2023 Razorblade2011</footer>
     </>
   )
 }

@@ -1,0 +1,29 @@
+.uploadauthors {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  .inputArea {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    .submit {
+      position: relative;
+      display: flex;
+      gap: 5px;
+      .authorsNames {
+        position: absolute;
+        top: calc(100% + 0.2rem);
+        background-color: $background-color-popup-tags-list;
+        color: white;
+        div {
+          padding: 5px;
+          cursor: not-allowed;
+          &:hover {
+            background-color: $background-color-popup-tags-list-element-hover;
+          }
+        }
+      }
+    }
+  }
+}

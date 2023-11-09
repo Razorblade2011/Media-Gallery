@@ -1,0 +1,53 @@
+.pageNumbersZone {
+  display: flex;
+  list-style-type: none;
+  justify-content: center;
+  .page {
+    background-color: white;
+    cursor: pointer;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1) 1s all;
+    padding: 0 12px;
+    height: 32px;
+    text-align: center;
+    margin: auto 4px;
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    letter-spacing: 0.01071em;
+    border-radius: 16px;
+    line-height: 1.43;
+    font-size: 13px;
+    min-width: 32px;
+    &:hover {
+      background-color: grey;
+    }
+    &.dots:hover {
+      background-color: transparent;
+      cursor: default;
+    }
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+    }
+
+    &.selected {
+      background-color: rgba(0, 0, 0, 0.08);
+      color: white;
+    }
+    .arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    &.disabled {
+      pointer-events: none;
+      color: grey;
+
+      &:hover {
+        background-color: transparent;
+        cursor: default;
+      }
+    }
+  }
+}

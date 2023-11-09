@@ -1,0 +1,36 @@
+.authorlistpart {
+  .inputZone {
+    position: relative;
+    .tagsList {
+      position: absolute;
+      top: calc(100% + 0.3rem);
+      background-color: $background-color-popup-authors-list;
+      color: white;
+      z-index: 2;
+      div {
+        padding: 5px;
+        cursor: pointer;
+        &:hover {
+          background-color: $background-color-popup-authors-list-element-hover;
+        }
+      }
+    }
+  }
+  .authorForUpload {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    div {
+      display: flex;
+      justify-content: center;
+      background-color: rgb(19, 133, 129);
+      padding: 5px;
+      border-radius: 10px;
+      border: 1px solid black;
+      cursor: pointer;
+      &:hover {
+        background-color: red;
+      }
+    }
+  }
+}

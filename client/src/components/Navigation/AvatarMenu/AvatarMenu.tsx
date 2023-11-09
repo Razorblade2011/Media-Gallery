@@ -1,19 +1,19 @@
-import { useState } from 'react'
 import styles from './AvatarMenu.module.scss'
 import Login from '../../Auth/Login/Login'
-import { useAppSelector } from '../../../redux/reduxHooks'
+import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
 import Logout from '../../Auth/Logout/Logout'
 import Registration from '../../Auth/Registration/Registration'
+import { setShowAvatarMenu } from '../../../redux/features/authSlice'
 
 const AvatarMenu = () => {
-  const [showMenu, setShowMenu] = useState(false)
-
-  const { isAuth, showRegistraion } = useAppSelector(
+  const { isAuth, showRegistraion, showAvatarMenu } = useAppSelector(
     (state) => state.authReducer
   )
 
+  const dispatch = useAppDispatch()
+
   const changeShowMenu = () => {
-    setShowMenu((state) => !state)
+    dispatch(setShowAvatarMenu(!showAvatarMenu))
   }
 
   return (
@@ -23,7 +23,7 @@ const AvatarMenu = () => {
         alt="blank avatar"
         onClick={changeShowMenu}
       />
-      {showMenu && (
+      {showAvatarMenu && (
         <div className={styles.menu}>
           {isAuth ? <Logout /> : showRegistraion ? <Registration /> : <Login />}
         </div>

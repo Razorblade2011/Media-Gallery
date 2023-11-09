@@ -1,0 +1,44 @@
+.previewObjectZone {
+  display: flex;
+  gap: 10px;
+  .previewObject {
+    position: relative;
+    height: 169px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button {
+      position: absolute;
+      right: 0.2rem;
+      top: 0.2rem;
+      z-index: 2;
+      border-radius: 10px;
+      cursor: pointer;
+      &:hover {
+        background-color: red;
+      }
+    }
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      position: relative;
+      object-fit: contain;
+    }
+    video {
+      max-width: 100%;
+      max-height: 100%;
+      position: relative;
+      object-fit: contain;
+    }
+  }
+  .objectNameZone {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    .objectName {
+      padding: 10px;
+    }
+  }
+}

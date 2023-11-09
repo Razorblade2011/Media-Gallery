@@ -34,7 +34,10 @@ app.use(errorMiddleware) // middleware обработки ошибок
 
 const start = async () => {
   try {
-    await mongoose.connect(process.env.DB_URL)
+    await mongoose.connect(process.env.DB_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
 
     app.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`)

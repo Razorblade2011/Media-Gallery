@@ -1,11 +1,34 @@
 version: '3.9'
 
 services:
-  mongo:
-    image: mongo
+  react-app:
+    build: ./client
     restart: always
     ports:
-      - 27010:27017
+      - 8080:80
+
+  nodejs-app:
+    build: ./server
+    restart: always
+    environment:
+      PORT: 5000
+      DB_URL: 'mongodb://root:example@mongo:27017/'
+      JWT_ACCESS_SECRET: 'secret_sml!34l60/9376;l@kllsdf'
+      JWT_REFRESH_SECRET: 'secret_ssdf34fdsfdh6;ljhklhllsdf'
+      CLIENT_URL: 'http://localhost:8080'
+      FFPROBE_PATH: '/usr/bin/ffprobe'
+      FFMPEG_PATH: '/usr/bin/ffmpeg'
+    ports:
+      - 5000:5000
+    depends_on:
+      - mongo
+    volumes:
+      - ./server/upload/original:/app/upload/original
+      - ./server/upload/preview:/app/upload/preview
+
+  mongo:
+    image: mongo:7.0.1
+    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example

@@ -2,10 +2,16 @@ import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
 import './App.scss'
 import HomePage from './pages/HomePage/HomePage'
-import Gallery from './pages/Gallery/Gallery'
+import GalleryPage from './pages/GalleryPage/GalleryPage'
 import Layout from './components/Layout'
 import { checkAuth } from './redux/features/authSlice'
 import { useAppDispatch } from './redux/reduxHooks'
+import UploadMediaPage from './pages/UploadPage/UploadMediaPage'
+import UploadNavigationLayout from './components/Upload/UploadNavigationLayout'
+import UploadTagsPage from './pages/UploadTagsPage/UploadTagsPage'
+import UploadAuthorsPage from './pages/UploadAuthorsPage/UploadAuthorsPage'
+import EditPage from './pages/EditPage/EditPage'
+import RequireAuth from './hooks/RequireAuth'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -21,7 +27,41 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="gallery" element={<Gallery />} />
+          <Route path="gallery" element={<GalleryPage />} />
+          <Route
+            path="edit"
+            element={
+              <RequireAuth>
+                <EditPage />
+              </RequireAuth>
+            }
+          />
+          <Route path="upload" element={<UploadNavigationLayout />}>
+            <Route
+              index
+              element={
+                <RequireAuth>
+                  <UploadMediaPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/upload/tags"
+              element={
+                <RequireAuth>
+                  <UploadTagsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/upload/authors"
+              element={
+                <RequireAuth>
+                  <UploadAuthorsPage />
+                </RequireAuth>
+              }
+            />
+          </Route>
         </Route>
       </Routes>
     </>

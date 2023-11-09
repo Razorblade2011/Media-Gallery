@@ -1,0 +1,44 @@
+.taglistpart {
+  display: flex;
+  flex-direction: column;
+  .inputZone {
+    position: relative;
+    .tagsList {
+      position: absolute;
+      top: calc(100% + 0.25rem);
+      background-color: $background-color-popup-tags-list;
+      color: white;
+      flex-wrap: wrap;
+      z-index: 2;
+      max-height: 20rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      div {
+        padding: 5px;
+        cursor: pointer;
+        &:hover {
+          background-color: $background-color-popup-tags-list-element-hover;
+        }
+      }
+    }
+  }
+  .uploadTagsPreview {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 5px;
+    div {
+      display: flex;
+      justify-content: center;
+      background-color: rgb(19, 133, 129);
+      padding: 5px;
+      border-radius: 10px;
+      border: 1px solid black;
+      cursor: pointer;
+      &:hover {
+        background-color: red;
+      }
+    }
+  }
+}

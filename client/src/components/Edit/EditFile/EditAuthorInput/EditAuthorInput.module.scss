@@ -1,0 +1,16 @@
+.editauthorinput {
+  .inputZone {
+    position: relative;
+    .authorsList {
+      position: absolute;
+      top: calc(100% + 0.3rem);
+      background-color: green;
+      color: white;
+      z-index: 2;
+      div {
+        padding: 5px;
+        cursor: pointer;
+      }
+    }
+  }
+}

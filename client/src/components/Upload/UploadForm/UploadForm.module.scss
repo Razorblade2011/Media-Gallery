@@ -1,0 +1,31 @@
+.uploadform {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  .uploadButton {
+    display: flex;
+    justify-content: center;
+    button {
+      padding: 10px;
+      border-radius: 10px;
+      transition: 0.5s;
+      cursor: pointer;
+      &:hover {
+        color: white;
+        background-color: green;
+      }
+    }
+  }
+  .metaInfo {
+    display: flex;
+    gap: 20px;
+    & > div {
+      flex-grow: 1;
+    }
+  }
+  .dropZone {
+    display: flex;
+    justify-content: center;
+  }
+}

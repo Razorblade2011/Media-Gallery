@@ -1,0 +1,95 @@
+@mixin border {
+  border-right: 1px solid black;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  & > div:first-child,
+  & > div:nth-child(2) {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@mixin flex {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.editfile {
+  position: relative;
+  height: 169px;
+  display: flex;
+  background-color: white;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  .inlineBlock {
+    display: flex;
+    height: 50vh;
+    max-width: 100%;
+    max-height: 100%;
+    gap: 10px;
+    .preview {
+      min-width: fit-content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 300px;
+      img {
+        height: 100%;
+      }
+      video {
+        height: 100%;
+      }
+    }
+    .fileName {
+      @include border();
+    }
+    .fileAuthor {
+      @include border();
+    }
+    .tagsZone {
+      @include border();
+      .fileTags {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        flex-direction: row;
+        border: none;
+        justify-content: center;
+        & > div {
+          background-color: green;
+          color: white;
+          padding: 5px;
+          border-radius: 10px;
+          cursor: pointer;
+          &:hover {
+            background-color: red;
+          }
+        }
+      }
+    }
+
+    .deleteButton {
+      position: absolute;
+      bottom: 0.2rem;
+      right: 0.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      &:hover {
+        background-color: red;
+      }
+    }
+    .applyButton {
+      position: absolute;
+      top: 0.2rem;
+      right: 0.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      &:hover {
+        background-color: green;
+      }
+    }
+  }
+}

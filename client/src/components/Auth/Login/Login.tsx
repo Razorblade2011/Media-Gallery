@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
 import {
   loginUser,
   setAuthError,
+  setShowAvatarMenu,
   setShowRegisration,
 } from '../../../redux/features/authSlice'
 
@@ -18,6 +19,7 @@ const Login = () => {
 
   const login = () => {
     dispatch(loginUser({ email, password }))
+    dispatch(setShowAvatarMenu(false))
   }
 
   const changeView = () => {

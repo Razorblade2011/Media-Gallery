@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
 import {
   registerUser,
   setAuthError,
+  setShowAvatarMenu,
   setShowRegisration,
 } from '../../../redux/features/authSlice'
 
@@ -22,7 +23,11 @@ const Registration = () => {
     if (password !== rePassword) {
       return dispatch(setAuthError('Пароли не совпадают!'))
     }
-    return await dispatch(registerUser({ email, password }))
+    await dispatch(registerUser({ email, password }))
+    if (!error) {
+      return dispatch(setShowAvatarMenu(false))
+    }
+    return
   }
 
   const changeView = () => {

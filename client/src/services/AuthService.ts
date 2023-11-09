@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import $api from '../http/api'
-import { AuthResponse } from '../models/response/AuthResponse'
+import { AuthResponse } from '../redux/types'
 
 const API_URL = import.meta.env.VITE_API_URL
 

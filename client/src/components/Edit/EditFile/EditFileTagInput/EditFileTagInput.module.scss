@@ -1,0 +1,29 @@
+.editfiletaginput {
+  display: flex;
+  flex-direction: column;
+  .inputZone {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    .tagsFromDb {
+      position: absolute;
+      top: calc(100% + 0.25em);
+      display: flex;
+      flex-direction: column;
+      z-index: 2;
+      padding: 5px;
+      // max-height: 10rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      div {
+        color: white;
+        background-color: rgb(18, 72, 43);
+        padding: 5px;
+        &:hover {
+          background-color: blue;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

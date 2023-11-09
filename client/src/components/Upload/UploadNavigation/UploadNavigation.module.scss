@@ -1,0 +1,8 @@
+.uploadnavigation {
+  display: flex;
+  align-items: flex-start;
+  background-color: $background-color-navbar;
+  &:last-child {
+    border-bottom-right-radius: 10px;
+  }
+}

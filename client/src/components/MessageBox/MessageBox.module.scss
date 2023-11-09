@@ -1,0 +1,17 @@
+.messagebox {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  .messageBox {
+    background-color: white;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    .message {
+      color: black;
+    }
+  }
+}

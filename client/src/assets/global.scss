@@ -1,3 +1,34 @@
+$background-image-main: linear-gradient(
+  45deg,
+  hsl(240deg 100% 20%) 0%,
+  hsl(239deg 72% 29%) 4%,
+  hsl(236deg 62% 37%) 9%,
+  hsl(233deg 57% 44%) 16%,
+  hsl(213deg 100% 41%) 23%,
+  hsl(203deg 100% 43%) 32%,
+  hsl(180deg 100% 31%) 42%,
+  hsl(143deg 100% 34%) 53%,
+  hsl(77deg 100% 31%) 65%,
+  hsl(48deg 100% 33%) 77%,
+  hsl(28deg 100% 39%) 89%,
+  hsl(0deg 71% 51%) 100%
+);
+$background-color-navbar: rgb(8, 114, 106);
+$background-color-navbar-hover-link: rgb(15, 96, 125);
+$background-color-navbar-active-link: rgb(42, 95, 156);
+
+$background-color-popup-tags-list: green;
+$background-color-popup-tags-list-element-hover: blue;
+
+$background-color-popup-authors-list: green;
+$background-color-popup-authors-list-element-hover: blue;
+
+$background-color-upload-progress-line: red;
+
+$z-index-popup-menu: 2;
+$z-index-avatar-menu: 3;
+$z-index-modal-window: 4;
+
 body {
   padding: 0;
   margin: 0;
@@ -7,9 +38,11 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  min-width: 100vw;
+  background: $background-image-main;
   main {
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     flex-grow: 1;
   }
   footer {
@@ -18,7 +51,3 @@ body {
     justify-content: center;
   }
 }
-
-$background-color-navbar: rgb(8, 114, 106);
-$background-color-navbar-hover-link: rgb(15, 96, 125);
-$background-color-navbar-active-link: rgb(42, 95, 156);
