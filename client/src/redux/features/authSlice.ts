@@ -154,9 +154,8 @@ export const auth = createSlice({
         state.user = payload.data.user
         state.loading = false
       })
-      .addCase(checkAuth.rejected, (state, { payload }: any) => {
+      .addCase(checkAuth.rejected, (state) => {
         state.isAuth = false
-        state.error = payload.response.data.message
       })
       .addCase(logout.pending, (state) => {
         state.loading = true
