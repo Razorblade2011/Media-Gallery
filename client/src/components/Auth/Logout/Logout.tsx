@@ -12,7 +12,9 @@ const Logout = () => {
 
   return (
     <div className={styles.logout}>
-      <button onClick={() => logoutUserFn()}>Logout</button>
+      <a onClick={() => logoutUserFn()}>
+        <div>Выйти</div>
+      </a>
     </div>
   )
 }

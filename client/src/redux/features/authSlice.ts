@@ -128,7 +128,7 @@ export const auth = createSlice({
       .addCase(loginUser.fulfilled, (state, { payload }: { payload: any }) => {
         state.loading = false
         state.isAuth = true
-        state.user = payload.data
+        state.user = payload.data.user
         state.error = ''
       })
       .addCase(loginUser.rejected, (state, { payload }: { payload: any }) => {

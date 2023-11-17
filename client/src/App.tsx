@@ -12,6 +12,7 @@ import UploadTagsPage from './pages/UploadTagsPage/UploadTagsPage'
 import UploadAuthorsPage from './pages/UploadAuthorsPage/UploadAuthorsPage'
 import EditPage from './pages/EditPage/EditPage'
 import RequireAuth from './hooks/RequireAuth'
+import UserDashboardPage from './pages/UserDashboardPage/UserDashboardPage'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -33,6 +34,14 @@ function App() {
             element={
               <RequireAuth>
                 <EditPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="dashboard"
+            element={
+              <RequireAuth>
+                <UserDashboardPage />
               </RequireAuth>
             }
           />
