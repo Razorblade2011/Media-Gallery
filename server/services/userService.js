@@ -55,6 +55,30 @@ class UserService {
     }
   }
 
+  // смена пароля
+  async updatePassword(email, oldPassword, newPassword) {
+    const user = await UserModel.findOne({ email })
+    if (!user) {
+      throw ApiError.BadRequest('Пользователь не найден')
+    }
+    const passCheck = await bcrypt.compare(oldPassword, user.password)
+    if (!passCheck) {
+      throw ApiError.BadRequest('Неправильный пароль')
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 6)
+    user.password = hashedPassword
+    await user.save()
+
+    const userDto = new UserDto(user)
+    const tokens = tokenService.generateTokens({ ...userDto })
+    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+    return {
+      ...tokens,
+      user: userDto,
+    }
+  }
+
   // выход пользователя из системы
   async logout(refreshToken) {
     const token = await tokenService.removeToken(refreshToken)

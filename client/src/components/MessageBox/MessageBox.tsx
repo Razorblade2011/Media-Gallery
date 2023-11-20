@@ -1,8 +1,10 @@
-import { useAppSelector } from '../../redux/reduxHooks'
 import styles from './MessageBox.module.scss'
 
-const MessageBox = () => {
-  const { message } = useAppSelector((state) => state.galleryReducer)
+interface Props {
+  message: string
+}
+
+const MessageBox = ({ message }: Props) => {
   return (
     <div className={styles.messagebox}>
       <div className={styles.messageBox}>

@@ -39,6 +39,27 @@ class UserController {
     }
   }
 
+  // обновление пароля
+  async updatePassword(req, res, next) {
+    try {
+      const { email, oldPassword, newPassword } = req.body
+      const userData = await userService.updatePassword(
+        email,
+        oldPassword,
+        newPassword
+      )
+      res.cookie('refreshToken', userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      })
+      userData.message = 'Пароль обновлён'
+      const { refreshToken: token, ...returnData } = userData
+      return res.json(returnData)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   // выход пользователя из системы
   async logout(req, res, next) {
     try {

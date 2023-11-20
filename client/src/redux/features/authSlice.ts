@@ -11,6 +11,7 @@ interface InitialState {
   isAuth: boolean
   user: UserI
   loading: boolean
+  message: string
   error: string
   showAvatarMenu: boolean
 }
@@ -27,6 +28,7 @@ const initialState: InitialState = {
   isAuth: false,
   user: { name: '', email: '', id: '' },
   loading: false,
+  message: '',
   error: '',
   showAvatarMenu: false,
 }
@@ -53,7 +55,7 @@ export const loginUser = createAsyncThunk(
       dispatch(setAuth(true))
       return response
     } catch (e) {
-      return rejectWithValue((e as ErrorAxios).response.data.message)
+      return rejectWithValue(e as ErrorAxios)
     }
   }
 )
@@ -70,9 +72,10 @@ export const updatePassword = createAsyncThunk(
         oldPassword,
         newPassword
       )
+      localStorage.setItem('token', response.data.accessToken)
       return response
     } catch (e) {
-      return rejectWithValue((e as ErrorAxios).response.data.message)
+      return rejectWithValue(e as ErrorAxios)
     }
   }
 )
@@ -113,6 +116,9 @@ export const auth = createSlice({
     },
     setLoading: (state, { payload }) => {
       state.loading = payload
+    },
+    setMessage: (state, { payload }) => {
+      state.message = payload
     },
     setShowAvatarMenu: (state, { payload }) => {
       state.showAvatarMenu = payload
@@ -170,6 +176,20 @@ export const auth = createSlice({
         state.error = payload.response.data.message
       })
 
+      // updatePassword
+      .addCase(updatePassword.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(updatePassword.fulfilled, (state, { payload }: any) => {
+        state.loading = false
+        state.message = payload.data.message
+        state.error = ''
+      })
+      .addCase(updatePassword.rejected, (state, { payload }: any) => {
+        state.loading = false
+        state.error = payload.response.data.message
+      })
+
       // checkAuth
       .addCase(checkAuth.pending, (state) => {
         state.loading = true
@@ -185,6 +205,12 @@ export const auth = createSlice({
   },
 })
 
-export const { setUser, setLoading, setAuth, setAuthError, setShowAvatarMenu } =
-  auth.actions
+export const {
+  setUser,
+  setLoading,
+  setMessage,
+  setAuth,
+  setAuthError,
+  setShowAvatarMenu,
+} = auth.actions
 export default auth.reducer

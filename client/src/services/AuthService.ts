@@ -32,7 +32,7 @@ export default class AuthService {
     oldPassword: string,
     newPassword: string
   ): Promise<AxiosResponse<AuthResponse>> {
-    return await $api.post<AuthResponse>('/users/registration', {
+    return await $api.post<AuthResponse>('/users/updatePassword', {
       email,
       oldPassword,
       newPassword,

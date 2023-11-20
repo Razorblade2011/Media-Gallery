@@ -1,17 +1,34 @@
 import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
 import { useState } from 'react'
 import styles from './UserDashboard.module.scss'
+import { setAuthError, setMessage } from '../../../redux/features/authSlice'
+import { updatePassword } from '../../../redux/features/authSlice'
+import MessageBox from '../../MessageBox/MessageBox'
 
 const UserDashboard = () => {
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [reNewPassword, setReNewPassword] = useState('')
 
-  const { user } = useAppSelector((state) => state.authReducer)
+  const { user, message } = useAppSelector((state) => state.authReducer)
 
   const dispatch = useAppDispatch()
 
-  const updatePassword = async () => {}
+  const updateUserPassword = async () => {
+    if (newPassword !== reNewPassword) {
+      dispatch(setAuthError('Пароли не совпадают'))
+    }
+    if (!newPassword || !reNewPassword || oldPassword) {
+      dispatch(setAuthError('Поля пустые'))
+    }
+    await dispatch(
+      updatePassword({ email: user.email, oldPassword, newPassword })
+    )
+    setReNewPassword('')
+    setNewPassword('')
+    setOldPassword('')
+    setTimeout(() => dispatch(setMessage('')), 10000)
+  }
 
   return (
     <div className={styles.userdashboard}>
@@ -43,8 +60,9 @@ const UserDashboard = () => {
           placeholder="Еще раз"
           type="text"
         />
-        <button>Сменить пароль</button>
+        <button onClick={updateUserPassword}>Сменить пароль</button>
       </div>
+      {message && <MessageBox message={message} />}
     </div>
   )
 }

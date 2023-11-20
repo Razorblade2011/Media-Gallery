@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Registration = () => {
   const [userName, setUserName] = useState('')
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
 
@@ -43,7 +43,7 @@ const Registration = () => {
       <div>
         <div>E-Mail</div>
         <input
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value.toLowerCase())}
           value={email}
           type="email"
           placeholder="введите email"
