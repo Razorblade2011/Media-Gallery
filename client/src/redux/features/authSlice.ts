@@ -1,13 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import AuthService from '../../services/AuthService'
-import { UserData, UserI } from '../types'
+import {
+  UserData,
+  UserDataRegister,
+  UserDataUpdatePassword,
+  UserI,
+} from '../types'
 
 interface InitialState {
   isAuth: boolean
   user: UserI
   loading: boolean
   error: string
-  showRegistraion: boolean
   showAvatarMenu: boolean
 }
 
@@ -21,18 +25,17 @@ interface ErrorAxios {
 
 const initialState: InitialState = {
   isAuth: false,
-  user: { email: '', id: '' },
+  user: { name: '', email: '', id: '' },
   loading: false,
   error: '',
-  showRegistraion: false,
   showAvatarMenu: false,
 }
 
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
-  async ({ email, password }: UserData, { rejectWithValue }) => {
+  async ({ name, email, password }: UserDataRegister, { rejectWithValue }) => {
     try {
-      const response = await AuthService.registration(email, password)
+      const response = await AuthService.registration(name, email, password)
       localStorage.setItem('token', response.data.accessToken)
       return response
     } catch (e) {
@@ -48,6 +51,25 @@ export const loginUser = createAsyncThunk(
       const response = await AuthService.login(email, password)
       localStorage.setItem('token', response.data.accessToken)
       dispatch(setAuth(true))
+      return response
+    } catch (e) {
+      return rejectWithValue((e as ErrorAxios).response.data.message)
+    }
+  }
+)
+
+export const updatePassword = createAsyncThunk(
+  'auth/updatePassword',
+  async (
+    { email, oldPassword, newPassword }: UserDataUpdatePassword,
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await AuthService.updatePassword(
+        email,
+        oldPassword,
+        newPassword
+      )
       return response
     } catch (e) {
       return rejectWithValue((e as ErrorAxios).response.data.message)
@@ -95,9 +117,6 @@ export const auth = createSlice({
     setShowAvatarMenu: (state, { payload }) => {
       state.showAvatarMenu = payload
     },
-    setShowRegisration: (state, { payload }) => {
-      state.showRegistraion = payload
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -108,7 +127,7 @@ export const auth = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, { payload }: any) => {
         state.loading = false
-        state.user = payload.data
+        state.user = payload.data.user
         state.error = ''
         state.isAuth = true
       })
@@ -116,7 +135,7 @@ export const auth = createSlice({
         registerUser.rejected,
         (state, { payload }: { payload: any }) => {
           state.loading = false
-          state.user = { email: '', id: '' }
+          state.user = { name: '', email: '', id: '' }
           state.error = payload
         }
       )
@@ -133,7 +152,7 @@ export const auth = createSlice({
       })
       .addCase(loginUser.rejected, (state, { payload }: { payload: any }) => {
         state.loading = false
-        state.user = { email: '', id: '' }
+        state.user = { name: '', email: '', id: '' }
         state.error = payload.response.data.message
       })
 
@@ -144,7 +163,7 @@ export const auth = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.loading = false
         state.isAuth = false
-        state.user = { email: '', id: '' }
+        state.user = { name: '', email: '', id: '' }
       })
       .addCase(logoutUser.rejected, (state, { payload }: any) => {
         state.loading = false
@@ -166,12 +185,6 @@ export const auth = createSlice({
   },
 })
 
-export const {
-  setUser,
-  setLoading,
-  setAuth,
-  setAuthError,
-  setShowRegisration,
-  setShowAvatarMenu,
-} = auth.actions
+export const { setUser, setLoading, setAuth, setAuthError, setShowAvatarMenu } =
+  auth.actions
 export default auth.reducer

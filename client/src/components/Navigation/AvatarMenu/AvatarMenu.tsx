@@ -1,13 +1,12 @@
 import styles from './AvatarMenu.module.scss'
 import Login from '../../Auth/Login/Login'
 import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
-import Registration from '../../Auth/Registration/Registration'
 import { setShowAvatarMenu } from '../../../redux/features/authSlice'
 import UserPanel from '../../Auth/UserPanel/UserPanel'
 import { useEffect, useRef } from 'react'
 
 const AvatarMenu = () => {
-  const { isAuth, user, showRegistraion, showAvatarMenu } = useAppSelector(
+  const { isAuth, user, showAvatarMenu } = useAppSelector(
     (state) => state.authReducer
   )
 
@@ -39,13 +38,7 @@ const AvatarMenu = () => {
       </div>
       {showAvatarMenu && (
         <div className={styles.menu} ref={menu}>
-          {isAuth ? (
-            <UserPanel />
-          ) : showRegistraion ? (
-            <Registration />
-          ) : (
-            <Login />
-          )}
+          {isAuth ? <UserPanel /> : <Login />}
         </div>
       )}
     </div>

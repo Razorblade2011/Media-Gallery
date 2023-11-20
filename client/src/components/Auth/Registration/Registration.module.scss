@@ -4,10 +4,23 @@
   gap: 10px;
   padding: 10px;
   background-color: rgb(13, 62, 13);
-  border-radius: 10px;
+  // border-radius: 10px;
   div {
-    color: white;
-    cursor: pointer;
-    margin: auto;
+    display: flex;
+    gap: 20px;
+    // margin-right: auto;
+    // justify-content: flex-start;
+    // margin: none;
+    &:first-child {
+      color: white;
+      margin: auto;
+    }
+    &:not(:first-child) {
+      // margin-right: auto;
+      justify-content: space-between;
+      div {
+        margin: 0;
+      }
+    }
   }
 }

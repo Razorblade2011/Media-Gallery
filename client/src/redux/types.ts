@@ -19,10 +19,23 @@ export interface Tag {
 // USER
 // ============================
 export interface User {
+  name: string
   email: string
   password: string
   createdAt: string
   updatedAt: string
+}
+
+export interface UserDataRegister {
+  name: string
+  email: string
+  password: string
+}
+
+export interface UserDataUpdatePassword {
+  email: string
+  oldPassword: string
+  newPassword: string
 }
 
 export interface UserData {
@@ -32,11 +45,11 @@ export interface UserData {
 
 export interface AuthResponse {
   accessToken: string
-  refreshToken: string
   user: UserI
 }
 
 export interface UserI {
+  name: string
   email: string
   id: string
 }

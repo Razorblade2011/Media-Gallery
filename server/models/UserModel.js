@@ -3,6 +3,8 @@ import mongoose from 'mongoose'
 // модель пользователя
 const userSchema = new mongoose.Schema(
   {
+    name: { type: String, unique: true },
+    avatar: String,
     email: { type: String, unique: true, require: true },
     password: { type: String, require: true },
     files: [
@@ -11,6 +13,10 @@ const userSchema = new mongoose.Schema(
         ref: 'Media',
       },
     ],
+    settings: {
+      videoVolume: { type: Number, default: 100 },
+      objectPerPage: { type: Number, default: 30 },
+    },
   },
   { timestamps: true }
 )

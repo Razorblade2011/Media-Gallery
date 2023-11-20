@@ -6,16 +6,26 @@ import ApiError from '../exceptions/apiError.js'
 
 class UserService {
   // регистрирует нового пользователя
-  async register(email, password) {
-    const candidate = await UserModel.findOne({ email })
-    if (candidate) {
+  async register(userName, email, password) {
+    const candidateUser = await UserModel.findOne({ name: userName })
+    if (candidateUser) {
+      throw ApiError.BadRequest(
+        `Пользователь с таким именем ${userName} уже существует!`
+      )
+    }
+    const candidateEmail = await UserModel.findOne({ email })
+    if (candidateEmail) {
       throw ApiError.BadRequest(
         `Пользователь с таким адресом ${email} уже существует!`
       )
     }
     const hashedPassword = await bcrypt.hash(password, 6)
 
-    const user = await UserModel.create({ email, password: hashedPassword })
+    const user = await UserModel.create({
+      name: userName,
+      email,
+      password: hashedPassword,
+    })
 
     const userDto = new UserDto(user) // id, email
     const tokens = tokenService.generateTokens({ ...userDto })

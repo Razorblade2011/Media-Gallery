@@ -13,6 +13,7 @@ import UploadAuthorsPage from './pages/UploadAuthorsPage/UploadAuthorsPage'
 import EditPage from './pages/EditPage/EditPage'
 import RequireAuth from './hooks/RequireAuth'
 import UserDashboardPage from './pages/UserDashboardPage/UserDashboardPage'
+import RegistrationPage from './pages/RegistrationPage/RegistrationPage'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -29,6 +30,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="gallery" element={<GalleryPage />} />
+          <Route path="registration" element={<RegistrationPage />} />
           <Route
             path="edit"
             element={

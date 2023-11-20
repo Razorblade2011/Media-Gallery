@@ -1,62 +1,73 @@
 import { useState } from 'react'
 import styles from './Registration.module.scss'
 import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
-import {
-  registerUser,
-  setAuthError,
-  setShowAvatarMenu,
-  setShowRegisration,
-} from '../../../redux/features/authSlice'
+import { registerUser, setAuthError } from '../../../redux/features/authSlice'
+import { useNavigate } from 'react-router-dom'
 
 const Registration = () => {
+  const [userName, setUserName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
 
-  const { showRegistraion, error } = useAppSelector(
-    (state) => state.authReducer
-  )
+  const { error } = useAppSelector((state) => state.authReducer)
 
   const dispatch = useAppDispatch()
+
+  const navigate = useNavigate()
 
   const register = async () => {
     if (password !== rePassword) {
       return dispatch(setAuthError('Пароли не совпадают!'))
     }
-    await dispatch(registerUser({ email, password }))
+    await dispatch(registerUser({ name: userName, email, password }))
     if (!error) {
-      return dispatch(setShowAvatarMenu(false))
+      return navigate('/gallery')
     }
     return
   }
 
-  const changeView = () => {
-    dispatch(setShowRegisration(!showRegistraion))
-    dispatch(setAuthError(''))
-  }
-
   return (
     <div className={styles.registration}>
-      <div onClick={() => changeView()}>Регистрация</div>
+      <div>Регистрация</div>
       {error && <div>{error}</div>}
-      <input
-        onChange={(e) => setEmail(e.target.value)}
-        value={email}
-        type="email"
-        placeholder="введите email"
-      />
-      <input
-        onChange={(e) => setPassword(e.target.value)}
-        value={password}
-        type="password"
-        placeholder="введите пароль"
-      />
-      <input
-        onChange={(e) => setRePassword(e.target.value)}
-        value={rePassword}
-        type="password"
-        placeholder="ещё раз"
-      />
+      <div>
+        <div>Имя</div>
+        <input
+          onChange={(e) => setUserName(e.target.value)}
+          value={userName}
+          type="text"
+          placeholder="введите имя"
+        />
+      </div>
+      <div>
+        <div>E-Mail</div>
+        <input
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          type="email"
+          placeholder="введите email"
+        />
+      </div>
+      <div>
+        <div>Пароль</div>
+
+        <input
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          type="password"
+          placeholder="введите пароль"
+        />
+      </div>
+      <div>
+        <div>Повторите пароль</div>
+        <input
+          onChange={(e) => setRePassword(e.target.value)}
+          value={rePassword}
+          type="password"
+          placeholder="ещё раз"
+        />
+      </div>
       <button onClick={register}>Зарегистрироваться</button>
     </div>
   )
