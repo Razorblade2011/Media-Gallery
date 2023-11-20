@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import styles from './Registration.module.scss'
 import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
 import { registerUser, setAuthError } from '../../../redux/features/authSlice'
@@ -9,6 +9,9 @@ const Registration = () => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
+  const [avatar, setAvatar] = useState<File>()
+
+  const avatarInput = useRef<HTMLInputElement>(null)
 
   const { error } = useAppSelector((state) => state.authReducer)
 
@@ -20,11 +23,17 @@ const Registration = () => {
     if (password !== rePassword) {
       return dispatch(setAuthError('Пароли не совпадают!'))
     }
-    await dispatch(registerUser({ name: userName, email, password }))
+    if (avatar) {
+      await dispatch(registerUser({ name: userName, avatar, email, password }))
+    }
     if (!error) {
       return navigate('/gallery')
     }
     return
+  }
+
+  const handleChange = (e: any) => {
+    if (e.target.files && e.target.files[0]) setAvatar(e.target.files[0])
   }
 
   return (
@@ -32,7 +41,25 @@ const Registration = () => {
       <div>Регистрация</div>
       {error && <div>{error}</div>}
       <div>
+        <div>Аватарка</div>
+
+        <button onClick={() => avatarInput.current?.click()}>Загрузить</button>
+        <input
+          onChange={(e) => handleChange(e)}
+          className={styles.inputAvatarFile}
+          ref={avatarInput}
+          type="file"
+          accept="image/*"
+        />
+      </div>
+      <div className={styles.avatarPreview}>
+        {avatar && <img src={URL.createObjectURL(avatar)} />}
+        {avatar && <img src={URL.createObjectURL(avatar)} />}
+        {avatar && <img src={URL.createObjectURL(avatar)} />}
+      </div>
+      <div>
         <div>Имя</div>
+
         <input
           onChange={(e) => setUserName(e.target.value)}
           value={userName}

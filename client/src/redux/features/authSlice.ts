@@ -26,7 +26,7 @@ interface ErrorAxios {
 
 const initialState: InitialState = {
   isAuth: false,
-  user: { name: '', email: '', id: '' },
+  user: { name: '', avatar: '', email: '', id: '' },
   loading: false,
   message: '',
   error: '',
@@ -35,9 +35,17 @@ const initialState: InitialState = {
 
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
-  async ({ name, email, password }: UserDataRegister, { rejectWithValue }) => {
+  async (
+    { name, avatar, email, password }: UserDataRegister,
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await AuthService.registration(name, email, password)
+      const response = await AuthService.registration(
+        name,
+        avatar,
+        email,
+        password
+      )
       localStorage.setItem('token', response.data.accessToken)
       return response
     } catch (e) {
@@ -58,6 +66,11 @@ export const loginUser = createAsyncThunk(
       return rejectWithValue(e as ErrorAxios)
     }
   }
+)
+
+export const updateAvatar = createAsyncThunk(
+  'auth/updateAvatar',
+  async () => {}
 )
 
 export const updatePassword = createAsyncThunk(
@@ -141,7 +154,7 @@ export const auth = createSlice({
         registerUser.rejected,
         (state, { payload }: { payload: any }) => {
           state.loading = false
-          state.user = { name: '', email: '', id: '' }
+          state.user = { name: '', avatar: '', email: '', id: '' }
           state.error = payload
         }
       )
@@ -158,7 +171,7 @@ export const auth = createSlice({
       })
       .addCase(loginUser.rejected, (state, { payload }: { payload: any }) => {
         state.loading = false
-        state.user = { name: '', email: '', id: '' }
+        state.user = { name: '', avatar: '', email: '', id: '' }
         state.error = payload.response.data.message
       })
 
@@ -169,7 +182,7 @@ export const auth = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.loading = false
         state.isAuth = false
-        state.user = { name: '', email: '', id: '' }
+        state.user = { name: '', avatar: '', email: '', id: '' }
       })
       .addCase(logoutUser.rejected, (state, { payload }: any) => {
         state.loading = false

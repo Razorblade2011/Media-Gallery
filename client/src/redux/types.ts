@@ -20,6 +20,7 @@ export interface Tag {
 // ============================
 export interface User {
   name: string
+  avatar: string
   email: string
   password: string
   createdAt: string
@@ -28,6 +29,7 @@ export interface User {
 
 export interface UserDataRegister {
   name: string
+  avatar: File
   email: string
   password: string
 }
@@ -50,6 +52,7 @@ export interface AuthResponse {
 
 export interface UserI {
   name: string
+  avatar: string
   email: string
   id: string
 }

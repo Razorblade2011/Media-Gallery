@@ -17,14 +17,17 @@ export default class AuthService {
 
   static async registration(
     userName: string,
+    avatar: File,
     email: string,
     password: string
   ): Promise<AxiosResponse<AuthResponse>> {
-    return await $api.post<AuthResponse>('/users/registration', {
-      userName,
-      email,
-      password,
-    })
+    const formData = new FormData()
+    formData.append('userName', userName)
+    formData.append('email', email)
+    formData.append('password', password)
+    formData.append('avatar', avatar)
+
+    return await $api.post<AuthResponse>('/users/registration', formData)
   }
 
   static async updatePassword(

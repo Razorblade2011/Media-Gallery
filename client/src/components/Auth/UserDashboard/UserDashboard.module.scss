@@ -7,6 +7,17 @@
     gap: 10px;
     padding: 20px;
   }
+  .avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    img {
+      width: 100px;
+      border-radius: 50%;
+      aspect-ratio: 1;
+    }
+  }
   .email {
     display: flex;
     gap: 10px;

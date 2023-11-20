@@ -1,4 +1,6 @@
 import { UserModel } from '../models/UserModel.js'
+import { parse, extname } from 'path'
+import { existsSync, unlinkSync } from 'fs'
 import bcrypt from 'bcrypt'
 import tokenService from './tokenService.js'
 import { UserDto } from '../dtos/userDto.js'
@@ -6,7 +8,7 @@ import ApiError from '../exceptions/apiError.js'
 
 class UserService {
   // регистрирует нового пользователя
-  async register(userName, email, password) {
+  async register(userName, avatar, email, password) {
     const candidateUser = await UserModel.findOne({ name: userName })
     if (candidateUser) {
       throw ApiError.BadRequest(
@@ -19,10 +21,25 @@ class UserService {
         `Пользователь с таким адресом ${email} уже существует!`
       )
     }
+
+    const DIR_NAME = process.cwd()
+    const avatarName = `${parse(avatar.name).name}-${Date.now()}${extname(
+      avatar.name
+    )}`
+
+    const avatarFilePath = `${DIR_NAME}/upload/avatars/${avatarName}`
+
+    if (existsSync(avatarFilePath)) {
+      throw new Error(`Файл с именем уже существует!`)
+    }
+
+    await avatar.mv(avatarFilePath)
+
     const hashedPassword = await bcrypt.hash(password, 6)
 
     const user = await UserModel.create({
       name: userName,
+      avatar: `/avatars/${avatarName}`,
       email,
       password: hashedPassword,
     })

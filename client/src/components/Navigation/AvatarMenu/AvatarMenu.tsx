@@ -15,6 +15,8 @@ const AvatarMenu = () => {
 
   const dispatch = useAppDispatch()
 
+  const staticPath = import.meta.env.VITE_API_STATIC
+
   const clickEvent = (e: any) => {
     e.stopPropagation()
     if (!showAvatarMenu && e.target === avatar.current) {
@@ -30,11 +32,15 @@ const AvatarMenu = () => {
     return () => window.removeEventListener('click', clickEvent)
   }, [clickEvent])
 
+  const avatarSrc = user.avatar
+    ? staticPath + user.avatar
+    : '/static/images/blank.webp'
+
   return (
     <div className={styles.avatarmenu}>
       <div className={styles.avatar}>
         <div>{user.email}</div>
-        <img src="/static/images/blank.webp" alt="blank avatar" ref={avatar} />
+        <img src={avatarSrc} alt="blank avatar" ref={avatar} />
       </div>
       {showAvatarMenu && (
         <div className={styles.menu} ref={menu}>

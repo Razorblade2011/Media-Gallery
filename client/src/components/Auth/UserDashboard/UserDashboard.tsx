@@ -14,6 +14,8 @@ const UserDashboard = () => {
 
   const dispatch = useAppDispatch()
 
+  const staticPath = import.meta.env.VITE_API_STATIC
+
   const updateUserPassword = async () => {
     if (newPassword !== reNewPassword) {
       dispatch(setAuthError('Пароли не совпадают'))
@@ -35,6 +37,10 @@ const UserDashboard = () => {
       <div className={styles.userName}>
         <div>Имя пользователя:</div>
         <div>{user.name}</div>
+      </div>
+      <div className={styles.avatar}>
+        <div>Аватар:</div>
+        <img src={staticPath + user.avatar} />
       </div>
       <div className={styles.email}>
         <div>Адрес почты:</div>
