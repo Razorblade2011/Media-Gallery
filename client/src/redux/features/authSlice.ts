@@ -1,14 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import AuthService from '../../services/AuthService'
 import {
-  AuthResponse,
   UserData,
   UserDataRegister,
   UserDataUpdatePassword,
   UserI,
 } from '../types'
 import { RootState } from '../store'
-import { AxiosError, AxiosResponse, isAxiosError } from 'axios'
+import { AxiosError, isAxiosError } from 'axios'
 
 interface InitialState {
   isAuth: boolean
@@ -71,23 +70,22 @@ export const loginUser = createAsyncThunk(
   }
 )
 
-export const updateAvatar = createAsyncThunk<
-  AuthResponse,
-  File,
-  { state: RootState; rejectValue: string | undefined }
->('auth/updateAvatar', async (avatar, { rejectWithValue, getState }) => {
-  try {
-    const { user } = getState().authReducer
-    const response = await AuthService.updateAvatar(user.id, avatar)
-    return response
-  } catch (e) {
-    if (isAxiosError(e)) {
-      return rejectWithValue(
-        (e as AxiosError<{ message: string }>).response?.data?.message
-      )
+export const updateAvatar = createAsyncThunk(
+  'auth/updateAvatar',
+  async (avatar: File, { rejectWithValue, getState }) => {
+    try {
+      const { user } = (getState() as RootState).authReducer
+      const response = await AuthService.updateAvatar(user.id, avatar)
+      return response
+    } catch (e) {
+      if (isAxiosError(e)) {
+        return rejectWithValue(
+          (e as AxiosError<{ message: string }>).response?.data?.message
+        )
+      }
     }
   }
-})
+)
 
 export const updatePassword = createAsyncThunk(
   'auth/updatePassword',
