@@ -25,6 +25,7 @@ services:
     volumes:
       - ./server/upload/original:/app/upload/original
       - ./server/upload/preview:/app/upload/preview
+      - ./server/upload/avatars:/app/upload/avatars
 
   mongo:
     image: mongo:7.0.1

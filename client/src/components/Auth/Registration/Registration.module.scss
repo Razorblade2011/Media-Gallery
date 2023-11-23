@@ -4,10 +4,38 @@
   gap: 10px;
   padding: 10px;
   background-color: rgb(13, 62, 13);
-  border-radius: 10px;
+  .inputAvatarFile {
+    display: none;
+  }
+  .avatarPreview {
+    display: flex;
+    align-items: flex-start;
+    img {
+      border-radius: 50%;
+      aspect-ratio: 1;
+      &:first-child {
+        width: 40px;
+      }
+      &:nth-child(2) {
+        width: 80px;
+      }
+      &:nth-child(3) {
+        width: 120px;
+      }
+    }
+  }
   div {
-    color: white;
-    cursor: pointer;
-    margin: auto;
+    display: flex;
+    gap: 20px;
+    &:first-child {
+      color: white;
+      margin: auto;
+    }
+    &:not(:first-child) {
+      justify-content: space-between;
+      div {
+        margin: 0;
+      }
+    }
   }
 }

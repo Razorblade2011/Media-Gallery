@@ -1,0 +1,40 @@
+.userdashboard {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  .userName {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+  }
+  .avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      input {
+        display: none;
+      }
+    }
+    img {
+      width: 100px;
+      border-radius: 50%;
+      aspect-ratio: 1;
+    }
+  }
+  .email {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+  }
+  .changePassword {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+}

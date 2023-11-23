@@ -5,31 +5,32 @@ import {
   loginUser,
   setAuthError,
   setShowAvatarMenu,
-  setShowRegisration,
 } from '../../../redux/features/authSlice'
+import { Link } from 'react-router-dom'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const dispatch = useAppDispatch()
-  const { showRegistraion, error } = useAppSelector(
-    (state) => state.authReducer
-  )
+  const { error } = useAppSelector((state) => state.authReducer)
 
   const login = () => {
-    dispatch(loginUser({ email, password }))
-    dispatch(setShowAvatarMenu(false))
-  }
-
-  const changeView = () => {
-    dispatch(setShowRegisration(!showRegistraion))
-    dispatch(setAuthError(''))
+    if (!email.length && !password.length) {
+      dispatch(setAuthError('Поля пустые'))
+    } else if (!email.length) {
+      dispatch(setAuthError('Email не заполнен'))
+    } else if (!password.length) {
+      dispatch(setAuthError('Пароль не может быть пустым'))
+    } else {
+      dispatch(loginUser({ email, password }))
+      dispatch(setShowAvatarMenu(false))
+    }
   }
 
   return (
     <div className={styles.login}>
-      <div onClick={() => changeView()}>Логин</div>
+      <div>Логин</div>
       {error && <div>{error}</div>}
       <input
         onChange={(e) => setEmail(e.target.value)}
@@ -44,6 +45,12 @@ const Login = () => {
         placeholder="Password"
       />
       <button onClick={login}>Войти</button>
+      <Link
+        onClick={() => dispatch(setShowAvatarMenu(false))}
+        to={'/registration'}
+      >
+        Регистрация
+      </Link>
     </div>
   )
 }
