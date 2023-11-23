@@ -1,13 +1,21 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import AuthService from '../../services/AuthService'
-import { UserData, UserI } from '../types'
+import {
+  AuthResponse,
+  UserData,
+  UserDataRegister,
+  UserDataUpdatePassword,
+  UserI,
+} from '../types'
+import { RootState } from '../store'
+import { AxiosError, AxiosResponse, isAxiosError } from 'axios'
 
 interface InitialState {
   isAuth: boolean
   user: UserI
   loading: boolean
+  message: string
   error: string
-  showRegistraion: boolean
   showAvatarMenu: boolean
 }
 
@@ -21,18 +29,26 @@ interface ErrorAxios {
 
 const initialState: InitialState = {
   isAuth: false,
-  user: { email: '', id: '' },
+  user: { name: '', avatar: '', email: '', id: '' },
   loading: false,
+  message: '',
   error: '',
-  showRegistraion: false,
   showAvatarMenu: false,
 }
 
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
-  async ({ email, password }: UserData, { rejectWithValue }) => {
+  async (
+    { name, avatar, email, password }: UserDataRegister,
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await AuthService.registration(email, password)
+      const response = await AuthService.registration(
+        name,
+        avatar,
+        email,
+        password
+      )
       localStorage.setItem('token', response.data.accessToken)
       return response
     } catch (e) {
@@ -50,7 +66,45 @@ export const loginUser = createAsyncThunk(
       dispatch(setAuth(true))
       return response
     } catch (e) {
-      return rejectWithValue((e as ErrorAxios).response.data.message)
+      return rejectWithValue(e as ErrorAxios)
+    }
+  }
+)
+
+export const updateAvatar = createAsyncThunk<
+  AuthResponse,
+  File,
+  { state: RootState; rejectValue: string | undefined }
+>('auth/updateAvatar', async (avatar, { rejectWithValue, getState }) => {
+  try {
+    const { user } = getState().authReducer
+    const response = await AuthService.updateAvatar(user.id, avatar)
+    return response
+  } catch (e) {
+    if (isAxiosError(e)) {
+      return rejectWithValue(
+        (e as AxiosError<{ message: string }>).response?.data?.message
+      )
+    }
+  }
+})
+
+export const updatePassword = createAsyncThunk(
+  'auth/updatePassword',
+  async (
+    { email, oldPassword, newPassword }: UserDataUpdatePassword,
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await AuthService.updatePassword(
+        email,
+        oldPassword,
+        newPassword
+      )
+      localStorage.setItem('token', response.data.accessToken)
+      return response
+    } catch (e) {
+      return rejectWithValue(e as ErrorAxios)
     }
   }
 )
@@ -60,17 +114,6 @@ export const logoutUser = createAsyncThunk<void>(
   async () => {
     await AuthService.logout()
     localStorage.removeItem('token')
-  }
-)
-
-export const logout = createAsyncThunk(
-  'auth/logout',
-  async (_, { rejectWithValue }) => {
-    try {
-      return await AuthService.logout()
-    } catch (e) {
-      return rejectWithValue(e as ErrorAxios)
-    }
   }
 )
 
@@ -103,21 +146,23 @@ export const auth = createSlice({
     setLoading: (state, { payload }) => {
       state.loading = payload
     },
+    setMessage: (state, { payload }) => {
+      state.message = payload
+    },
     setShowAvatarMenu: (state, { payload }) => {
       state.showAvatarMenu = payload
-    },
-    setShowRegisration: (state, { payload }) => {
-      state.showRegistraion = payload
     },
   },
   extraReducers: (builder) => {
     builder
+
+      //registerUser
       .addCase(registerUser.pending, (state) => {
         state.loading = true
       })
       .addCase(registerUser.fulfilled, (state, { payload }: any) => {
         state.loading = false
-        state.user = payload.data
+        state.user = payload.data.user
         state.error = ''
         state.isAuth = true
       })
@@ -125,27 +170,57 @@ export const auth = createSlice({
         registerUser.rejected,
         (state, { payload }: { payload: any }) => {
           state.loading = false
-          state.user = { email: '', id: '' }
+          state.user = { name: '', avatar: '', email: '', id: '' }
           state.error = payload
         }
       )
+
+      // loginUser
       .addCase(loginUser.pending, (state) => {
         state.loading = true
       })
       .addCase(loginUser.fulfilled, (state, { payload }: { payload: any }) => {
         state.loading = false
         state.isAuth = true
-        state.user = payload.data
+        state.user = payload.data.user
         state.error = ''
       })
       .addCase(loginUser.rejected, (state, { payload }: { payload: any }) => {
         state.loading = false
-        state.user = { email: '', id: '' }
+        state.user = { name: '', avatar: '', email: '', id: '' }
         state.error = payload.response.data.message
       })
-      .addCase(logoutUser.fulfilled, (state) => {
-        state.isAuth = false
+
+      // updatePassword
+      .addCase(updatePassword.pending, (state) => {
+        state.loading = true
       })
+      .addCase(updatePassword.fulfilled, (state, { payload }: any) => {
+        state.loading = false
+        state.message = payload.data.message
+        state.error = ''
+      })
+      .addCase(updatePassword.rejected, (state, { payload }: any) => {
+        state.loading = false
+        state.error = payload.response.data.message
+      })
+
+      // updateAvatar
+      .addCase(updateAvatar.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(updateAvatar.fulfilled, (state, { payload }: any) => {
+        state.loading = false
+        state.message = payload.data.message
+        state.error = ''
+        state.user = payload.data.user
+      })
+      .addCase(updateAvatar.rejected, (state, { payload }: any) => {
+        state.loading = false
+        state.error = payload.response.data.message
+      })
+
+      // checkAuth
       .addCase(checkAuth.pending, (state) => {
         state.loading = true
       })
@@ -157,27 +232,15 @@ export const auth = createSlice({
       .addCase(checkAuth.rejected, (state) => {
         state.isAuth = false
       })
-      .addCase(logout.pending, (state) => {
-        state.loading = true
-      })
-      .addCase(logout.fulfilled, (state) => {
-        state.loading = false
-        state.isAuth = false
-        state.user = { email: '', id: '' }
-      })
-      .addCase(logout.rejected, (state, { payload }: any) => {
-        state.loading = false
-        state.error = payload.response.data.message
-      })
   },
 })
 
 export const {
   setUser,
   setLoading,
+  setMessage,
   setAuth,
   setAuthError,
-  setShowRegisration,
   setShowAvatarMenu,
 } = auth.actions
 export default auth.reducer

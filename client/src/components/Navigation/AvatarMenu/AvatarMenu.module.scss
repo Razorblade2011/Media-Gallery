@@ -7,9 +7,16 @@
   align-items: center;
   padding: 5px;
   z-index: $z-index-avatar-menu;
+  .avatar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+  }
   img {
     border-radius: 50%;
     width: 40px;
+    aspect-ratio: 1;
     cursor: pointer;
   }
   .menu {

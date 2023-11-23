@@ -1,4 +1,6 @@
 import { UserModel } from '../models/UserModel.js'
+import { parse, extname } from 'path'
+import { existsSync, unlinkSync } from 'fs'
 import bcrypt from 'bcrypt'
 import tokenService from './tokenService.js'
 import { UserDto } from '../dtos/userDto.js'
@@ -6,16 +8,41 @@ import ApiError from '../exceptions/apiError.js'
 
 class UserService {
   // регистрирует нового пользователя
-  async register(email, password) {
-    const candidate = await UserModel.findOne({ email })
-    if (candidate) {
+  async register(userName, avatar, email, password) {
+    const candidateUser = await UserModel.findOne({ name: userName })
+    if (candidateUser) {
+      throw ApiError.BadRequest(
+        `Пользователь с таким именем ${userName} уже существует!`
+      )
+    }
+    const candidateEmail = await UserModel.findOne({ email })
+    if (candidateEmail) {
       throw ApiError.BadRequest(
         `Пользователь с таким адресом ${email} уже существует!`
       )
     }
+
+    const DIR_NAME = process.cwd()
+    const avatarName = `${parse(avatar.name).name}-${Date.now()}${extname(
+      avatar.name
+    )}`
+
+    const avatarFilePath = `${DIR_NAME}/upload/avatars/${avatarName}`
+
+    if (existsSync(avatarFilePath)) {
+      throw new Error(`Файл с именем уже существует!`)
+    }
+
+    await avatar.mv(avatarFilePath)
+
     const hashedPassword = await bcrypt.hash(password, 6)
 
-    const user = await UserModel.create({ email, password: hashedPassword })
+    const user = await UserModel.create({
+      name: userName,
+      avatar: `/avatars/${avatarName}`,
+      email,
+      password: hashedPassword,
+    })
 
     const userDto = new UserDto(user) // id, email
     const tokens = tokenService.generateTokens({ ...userDto })
@@ -43,6 +70,57 @@ class UserService {
       ...tokens,
       user: userDto,
     }
+  }
+
+  // смена пароля
+  async updatePassword(email, oldPassword, newPassword) {
+    const user = await UserModel.findOne({ email })
+    if (!user) {
+      throw ApiError.BadRequest('Пользователь не найден')
+    }
+    const passCheck = await bcrypt.compare(oldPassword, user.password)
+    if (!passCheck) {
+      throw ApiError.BadRequest('Неправильный пароль')
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 6)
+    user.password = hashedPassword
+    await user.save()
+
+    const userDto = new UserDto(user)
+    const tokens = tokenService.generateTokens({ ...userDto })
+    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+    return {
+      ...tokens,
+      user: userDto,
+    }
+  }
+
+  // обновление аватарки
+  async updateAvatar(userId, avatar) {
+    const user = await UserModel.findById(userId)
+    if (!user) {
+      throw ApiError.BadRequest('Пользователь не найден')
+    }
+    const DIR_NAME = process.cwd()
+    const avatarName = `${parse(avatar.name).name}-${Date.now()}${extname(
+      avatar.name
+    )}`
+    const avatarFilePath = `${DIR_NAME}/upload/avatars/${avatarName}`
+    if (existsSync(avatarFilePath)) {
+      throw new Error(`Файл с именем уже существует!`)
+    }
+    await avatar.mv(avatarFilePath)
+    const oldAvatar = `${DIR_NAME}/upload${user.avatar}`
+    if (existsSync(oldAvatar)) {
+      unlinkSync(oldAvatar)
+    }
+    user.avatar = `/avatars/${avatarName}`
+    await user.save()
+
+    const userDto = new UserDto(user)
+
+    return { user: userDto }
   }
 
   // выход пользователя из системы

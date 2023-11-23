@@ -12,6 +12,8 @@ userRouter.post(
   userConroller.registration
 )
 userRouter.post('/login', userConroller.login)
+userRouter.post('/updatePassword', userConroller.updatePassword)
+userRouter.post('/updateAvatar', userConroller.updateAvatar)
 userRouter.post('/logout', userConroller.logout)
 
 export default userRouter

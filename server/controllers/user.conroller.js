@@ -10,13 +10,19 @@ class UserController {
       if (!errors.isEmpty()) {
         return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))
       }
-      const { email, password } = req.body
-      const userData = await userService.register(email, password)
+      const { files, body } = req
+      const userData = await userService.register(
+        body.userName,
+        files.avatar,
+        body.email,
+        body.password
+      )
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       })
-      return res.json(userData)
+      const { refreshToken: token, ...returnData } = userData
+      return res.json(returnData)
     } catch (error) {
       next(error)
     }
@@ -31,6 +37,41 @@ class UserController {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       })
+      const { refreshToken: token, ...returnData } = userData
+      return res.json(returnData)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  // обновление пароля
+  async updatePassword(req, res, next) {
+    try {
+      const { email, oldPassword, newPassword } = req.body
+      const userData = await userService.updatePassword(
+        email,
+        oldPassword,
+        newPassword
+      )
+      res.cookie('refreshToken', userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      })
+      userData.message = 'Пароль обновлён'
+      const { refreshToken: token, ...returnData } = userData
+      return res.json(returnData)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async updateAvatar(req, res, next) {
+    try {
+      const { id } = req.body
+      const { avatar } = req.files
+      const userData = await userService.updateAvatar(id, avatar)
+      userData.message = 'Аватар обновлён'
+      console.log(userData)
       return res.json(userData)
     } catch (error) {
       next(error)
@@ -58,7 +99,8 @@ class UserController {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       })
-      return res.json(userData)
+      const { refreshToken: token, ...returnData } = userData
+      return res.json(returnData)
     } catch (error) {
       next(error)
     }

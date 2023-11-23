@@ -1,0 +1,17 @@
+.logout {
+  display: flex;
+  position: relative;
+  padding: 5px;
+  a {
+    padding: 5px;
+    cursor: pointer;
+    &:hover {
+      background-color: red;
+    }
+    div {
+      display: flex;
+      color: black;
+      text-transform: none;
+    }
+  }
+}
