@@ -1,7 +1,11 @@
 import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
-import { useState } from 'react'
+import { ChangeEvent, useRef, useState } from 'react'
 import styles from './UserDashboard.module.scss'
-import { setAuthError, setMessage } from '../../../redux/features/authSlice'
+import {
+  setAuthError,
+  setMessage,
+  updateAvatar,
+} from '../../../redux/features/authSlice'
 import { updatePassword } from '../../../redux/features/authSlice'
 import MessageBox from '../../MessageBox/MessageBox'
 
@@ -9,6 +13,9 @@ const UserDashboard = () => {
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [reNewPassword, setReNewPassword] = useState('')
+  const [newAvatar, setNewAvatar] = useState<File | null>(null)
+
+  const newAvatarRef = useRef<HTMLInputElement>(null)
 
   const { user, message } = useAppSelector((state) => state.authReducer)
 
@@ -29,7 +36,20 @@ const UserDashboard = () => {
     setReNewPassword('')
     setNewPassword('')
     setOldPassword('')
-    setTimeout(() => dispatch(setMessage('')), 10000)
+    setTimeout(() => dispatch(setMessage('')), 5000)
+  }
+
+  const setAvatar = (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target
+    const selectedFiles = files as FileList
+    setNewAvatar(selectedFiles?.[0])
+  }
+
+  const saveAvatar = async () => {
+    if (newAvatar) {
+      await dispatch(updateAvatar(newAvatar))
+    }
+    setTimeout(() => dispatch(setMessage('')), 5000)
   }
 
   return (
@@ -39,8 +59,26 @@ const UserDashboard = () => {
         <div>{user.name}</div>
       </div>
       <div className={styles.avatar}>
-        <div>Аватар:</div>
-        <img src={staticPath + user.avatar} />
+        <div>
+          <div>Аватар:</div>
+          <button onClick={() => newAvatarRef.current?.click()}>
+            Изменить
+          </button>
+          <input
+            ref={newAvatarRef}
+            accept="image/*"
+            type="file"
+            onChange={(e) => setAvatar(e)}
+          />
+          <button onClick={saveAvatar}>Сохранить</button>
+        </div>
+        <img
+          src={
+            newAvatar
+              ? URL.createObjectURL(newAvatar)
+              : staticPath + user.avatar
+          }
+        />
       </div>
       <div className={styles.email}>
         <div>Адрес почты:</div>

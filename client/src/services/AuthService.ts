@@ -42,6 +42,16 @@ export default class AuthService {
     })
   }
 
+  static async updateAvatar(
+    id: string,
+    avatar: File
+  ): Promise<AxiosResponse<AuthResponse>> {
+    const formData = new FormData()
+    formData.append('id', id)
+    formData.append('avatar', avatar)
+    return await $api.post<AuthResponse>('/users/updateAvatar', formData)
+  }
+
   static async logout() {
     return await $api.post('/users/logout')
   }

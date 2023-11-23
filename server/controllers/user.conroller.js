@@ -65,6 +65,19 @@ class UserController {
     }
   }
 
+  async updateAvatar(req, res, next) {
+    try {
+      const { id } = req.body
+      const { avatar } = req.files
+      const userData = await userService.updateAvatar(id, avatar)
+      userData.message = 'Аватар обновлён'
+      console.log(userData)
+      return res.json(userData)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   // выход пользователя из системы
   async logout(req, res, next) {
     try {

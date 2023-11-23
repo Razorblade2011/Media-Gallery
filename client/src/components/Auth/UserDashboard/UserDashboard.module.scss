@@ -12,6 +12,14 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      input {
+        display: none;
+      }
+    }
     img {
       width: 100px;
       border-radius: 50%;

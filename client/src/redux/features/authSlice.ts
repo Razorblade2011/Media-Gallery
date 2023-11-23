@@ -1,11 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import AuthService from '../../services/AuthService'
 import {
+  AuthResponse,
   UserData,
   UserDataRegister,
   UserDataUpdatePassword,
   UserI,
 } from '../types'
+import { RootState } from '../store'
+import { AxiosError, AxiosResponse, isAxiosError } from 'axios'
 
 interface InitialState {
   isAuth: boolean
@@ -68,10 +71,23 @@ export const loginUser = createAsyncThunk(
   }
 )
 
-export const updateAvatar = createAsyncThunk(
-  'auth/updateAvatar',
-  async () => {}
-)
+export const updateAvatar = createAsyncThunk<
+  AuthResponse,
+  File,
+  { state: RootState; rejectValue: string | undefined }
+>('auth/updateAvatar', async (avatar, { rejectWithValue, getState }) => {
+  try {
+    const { user } = getState().authReducer
+    const response = await AuthService.updateAvatar(user.id, avatar)
+    return response
+  } catch (e) {
+    if (isAxiosError(e)) {
+      return rejectWithValue(
+        (e as AxiosError<{ message: string }>).response?.data?.message
+      )
+    }
+  }
+})
 
 export const updatePassword = createAsyncThunk(
   'auth/updatePassword',
@@ -175,20 +191,6 @@ export const auth = createSlice({
         state.error = payload.response.data.message
       })
 
-      //logoutUser
-      .addCase(logoutUser.pending, (state) => {
-        state.loading = true
-      })
-      .addCase(logoutUser.fulfilled, (state) => {
-        state.loading = false
-        state.isAuth = false
-        state.user = { name: '', avatar: '', email: '', id: '' }
-      })
-      .addCase(logoutUser.rejected, (state, { payload }: any) => {
-        state.loading = false
-        state.error = payload.response.data.message
-      })
-
       // updatePassword
       .addCase(updatePassword.pending, (state) => {
         state.loading = true
@@ -199,6 +201,21 @@ export const auth = createSlice({
         state.error = ''
       })
       .addCase(updatePassword.rejected, (state, { payload }: any) => {
+        state.loading = false
+        state.error = payload.response.data.message
+      })
+
+      // updateAvatar
+      .addCase(updateAvatar.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(updateAvatar.fulfilled, (state, { payload }: any) => {
+        state.loading = false
+        state.message = payload.data.message
+        state.error = ''
+        state.user = payload.data.user
+      })
+      .addCase(updateAvatar.rejected, (state, { payload }: any) => {
         state.loading = false
         state.error = payload.response.data.message
       })

@@ -96,6 +96,33 @@ class UserService {
     }
   }
 
+  // обновление аватарки
+  async updateAvatar(userId, avatar) {
+    const user = await UserModel.findById(userId)
+    if (!user) {
+      throw ApiError.BadRequest('Пользователь не найден')
+    }
+    const DIR_NAME = process.cwd()
+    const avatarName = `${parse(avatar.name).name}-${Date.now()}${extname(
+      avatar.name
+    )}`
+    const avatarFilePath = `${DIR_NAME}/upload/avatars/${avatarName}`
+    if (existsSync(avatarFilePath)) {
+      throw new Error(`Файл с именем уже существует!`)
+    }
+    await avatar.mv(avatarFilePath)
+    const oldAvatar = `${DIR_NAME}/upload${user.avatar}`
+    if (existsSync(oldAvatar)) {
+      unlinkSync(oldAvatar)
+    }
+    user.avatar = `/avatars/${avatarName}`
+    await user.save()
+
+    const userDto = new UserDto(user)
+
+    return { user: userDto }
+  }
+
   // выход пользователя из системы
   async logout(refreshToken) {
     const token = await tokenService.removeToken(refreshToken)
