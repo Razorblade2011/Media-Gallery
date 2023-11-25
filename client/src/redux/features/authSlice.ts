@@ -132,6 +132,10 @@ export const auth = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    setAuthFalse: (state) => {
+      state.isAuth = false
+      state.user = initialState.user
+    },
     setAuth: (state, { payload }) => {
       state.isAuth = payload
     },
@@ -237,6 +241,7 @@ export const {
   setUser,
   setLoading,
   setMessage,
+  setAuthFalse,
   setAuth,
   setAuthError,
   setShowAvatarMenu,

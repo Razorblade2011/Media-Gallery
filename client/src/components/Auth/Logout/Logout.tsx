@@ -1,4 +1,4 @@
-import { logoutUser, setAuth } from '../../../redux/features/authSlice'
+import { logoutUser, setAuthFalse } from '../../../redux/features/authSlice'
 import { useAppDispatch } from '../../../redux/reduxHooks'
 import styles from './Logout.module.scss'
 
@@ -7,7 +7,7 @@ const Logout = () => {
 
   const logoutUserFn = async () => {
     await dispatch(logoutUser())
-    dispatch(setAuth(false))
+    dispatch(setAuthFalse())
   }
 
   return (
