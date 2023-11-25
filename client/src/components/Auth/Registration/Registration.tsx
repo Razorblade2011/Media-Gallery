@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './Registration.module.scss'
 import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
 import { registerUser, setAuthError } from '../../../redux/features/authSlice'
@@ -10,6 +10,11 @@ const Registration = () => {
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
   const [avatar, setAvatar] = useState<File>()
+  const [avatarUrl, setAvatarUrl] = useState('')
+
+  useEffect(() => {
+    if (avatar) setAvatarUrl(URL.createObjectURL(avatar))
+  }, [avatar])
 
   const avatarInput = useRef<HTMLInputElement>(null)
 
@@ -53,9 +58,9 @@ const Registration = () => {
         />
       </div>
       <div className={styles.avatarPreview}>
-        {avatar && <img src={URL.createObjectURL(avatar)} />}
-        {avatar && <img src={URL.createObjectURL(avatar)} />}
-        {avatar && <img src={URL.createObjectURL(avatar)} />}
+        {avatar && <img src={avatarUrl} />}
+        {avatar && <img src={avatarUrl} />}
+        {avatar && <img src={avatarUrl} />}
       </div>
       <div>
         <div>Имя</div>
