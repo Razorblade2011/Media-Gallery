@@ -177,6 +177,12 @@ class UserService {
       $pull: { files: { $in: mediaIds } },
     })
   }
+
+  async setVolume(id, volume) {
+    return UserModel.findByIdAndUpdate(id, {
+      settings: { videoVolume: volume },
+    })
+  }
 }
 
 export default new UserService()

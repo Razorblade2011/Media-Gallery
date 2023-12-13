@@ -51,8 +51,12 @@ export interface AuthResponse {
 }
 
 export interface UserI {
+  id: string
   name: string
   avatar: string
   email: string
-  id: string
+  settings: {
+    videoVolume: number
+    objectPerPage: number
+  }
 }

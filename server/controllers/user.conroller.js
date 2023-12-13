@@ -105,6 +105,17 @@ class UserController {
       next(error)
     }
   }
+
+  async setVolume(req, res, next) {
+    try {
+      const { id, volume } = req.body
+      const user = await userService.setVolume(id, volume)
+      const { videoVolume } = user.settings
+      return res.status(200).json(videoVolume)
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 export default new UserController()
