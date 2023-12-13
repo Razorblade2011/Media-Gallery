@@ -105,7 +105,7 @@ class UserController {
       next(error)
     }
   }
-
+  // изменение громкости звука
   async setVolume(req, res, next) {
     try {
       const { id, volume } = req.body

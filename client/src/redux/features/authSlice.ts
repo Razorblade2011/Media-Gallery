@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import AuthService from '../../services/AuthService'
 import {
   UserData,
@@ -137,11 +137,15 @@ export const checkAuth = createAsyncThunk(
 export const setUserVideoVolume = createAsyncThunk(
   'auth/setUserVideoVolume',
   async (volumeValue: number, { rejectWithValue, getState, dispatch }) => {
-    const { user } = (getState() as RootState).authReducer
-    const volume = +volumeValue.toFixed(2)
-    dispatch(setVolume(volume))
-    const response = await AuthService.setUserVolume(user.id, volume)
-    return response
+    try {
+      const { user } = (getState() as RootState).authReducer
+      const volume = +volumeValue.toFixed(2)
+      dispatch(setVolume(volume))
+      const response = await AuthService.setUserVolume(user.id, volume)
+      return response
+    } catch (e) {
+      return rejectWithValue(e as ErrorAxios)
+    }
   }
 )
 
@@ -258,6 +262,9 @@ export const auth = createSlice({
       // setUserVideoVolume
       .addCase(setUserVideoVolume.fulfilled, (state, { payload }: any) => {
         state.user.settings.videoVolume = payload.data
+      })
+      .addCase(setUserVideoVolume.rejected, (state, { payload }: any) => {
+        state.message = payload.message
       })
   },
 })

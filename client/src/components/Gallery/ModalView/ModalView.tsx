@@ -1,10 +1,8 @@
 import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
 import styles from './ModalView.module.scss'
 import { setUserVideoVolume } from '../../../redux/features/authSlice'
-import { useState } from 'react'
 
 const ModalView = () => {
-  const [clearTimer, setClearTimer] = useState(false)
   const file = useAppSelector((state) => state.galleryReducer.modalObject)
   const { isAuth, user } = useAppSelector((state) => state.authReducer)
 
@@ -13,13 +11,7 @@ const ModalView = () => {
   const staticPath = import.meta.env.VITE_API_STATIC
 
   const onVolumeChange = async (e: any) => {
-    // if (!clearTimer) {
-    //   setClearTimer(true)
-    //   setTimeout(() => {
     dispatch(setUserVideoVolume(e.target.volume as number))
-    //     setClearTimer(false)
-    //   }, 10000)
-    // }
   }
 
   const setVolume = async (e: any) => {
