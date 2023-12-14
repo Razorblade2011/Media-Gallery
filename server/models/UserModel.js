@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
       },
     ],
     settings: {
-      videoVolume: { type: Number, default: 100 },
+      videoVolume: { type: Number, default: 1 },
       objectPerPage: { type: Number, default: 30 },
     },
   },

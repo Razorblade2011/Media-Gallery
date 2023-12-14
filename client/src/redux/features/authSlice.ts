@@ -28,7 +28,13 @@ interface ErrorAxios {
 
 const initialState: InitialState = {
   isAuth: false,
-  user: { name: '', avatar: '', email: '', id: '' },
+  user: {
+    name: '',
+    avatar: '',
+    email: '',
+    id: '',
+    settings: { videoVolume: 0, objectPerPage: 30 },
+  },
   loading: false,
   message: '',
   error: '',
@@ -128,6 +134,21 @@ export const checkAuth = createAsyncThunk(
   }
 )
 
+export const setUserVideoVolume = createAsyncThunk(
+  'auth/setUserVideoVolume',
+  async (volumeValue: number, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { user } = (getState() as RootState).authReducer
+      const volume = +volumeValue.toFixed(2)
+      dispatch(setVolume(volume))
+      const response = await AuthService.setUserVolume(user.id, volume)
+      return response
+    } catch (e) {
+      return rejectWithValue(e as ErrorAxios)
+    }
+  }
+)
+
 export const auth = createSlice({
   name: 'auth',
   initialState,
@@ -154,6 +175,9 @@ export const auth = createSlice({
     setShowAvatarMenu: (state, { payload }) => {
       state.showAvatarMenu = payload
     },
+    setVolume: (state, { payload }) => {
+      state.user.settings.videoVolume = payload
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -172,7 +196,7 @@ export const auth = createSlice({
         registerUser.rejected,
         (state, { payload }: { payload: any }) => {
           state.loading = false
-          state.user = { name: '', avatar: '', email: '', id: '' }
+          state.user = initialState.user
           state.error = payload
         }
       )
@@ -189,7 +213,7 @@ export const auth = createSlice({
       })
       .addCase(loginUser.rejected, (state, { payload }: { payload: any }) => {
         state.loading = false
-        state.user = { name: '', avatar: '', email: '', id: '' }
+        state.user = initialState.user
         state.error = payload.response.data.message
       })
 
@@ -234,6 +258,14 @@ export const auth = createSlice({
       .addCase(checkAuth.rejected, (state) => {
         state.isAuth = false
       })
+
+      // setUserVideoVolume
+      .addCase(setUserVideoVolume.fulfilled, (state, { payload }: any) => {
+        state.user.settings.videoVolume = payload.data
+      })
+      .addCase(setUserVideoVolume.rejected, (state, { payload }: any) => {
+        state.message = payload.message
+      })
   },
 })
 
@@ -245,5 +277,6 @@ export const {
   setAuth,
   setAuthError,
   setShowAvatarMenu,
+  setVolume,
 } = auth.actions
 export default auth.reducer

@@ -177,6 +177,18 @@ class UserService {
       $pull: { files: { $in: mediaIds } },
     })
   }
+  // изменяет запись о громкости звука
+  async setVolume(id, volume) {
+    return UserModel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          settings: { videoVolume: volume },
+        },
+      },
+      { new: true }
+    )
+  }
 }
 
 export default new UserService()
