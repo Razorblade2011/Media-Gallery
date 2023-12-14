@@ -63,6 +63,9 @@ export default class AuthService {
   }
 
   static async setUserVolume(userId: string, volumeValue: number) {
-    return await $api.post<number>('/users/volume', { id: userId, volumeValue })
+    return await $api.post<number>('/users/volume', {
+      id: userId,
+      volume: volumeValue,
+    })
   }
 }

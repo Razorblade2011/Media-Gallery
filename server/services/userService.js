@@ -179,9 +179,15 @@ class UserService {
   }
   // изменяет запись о громкости звука
   async setVolume(id, volume) {
-    return UserModel.findByIdAndUpdate(id, {
-      settings: { videoVolume: volume },
-    })
+    return UserModel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          settings: { videoVolume: volume },
+        },
+      },
+      { new: true }
+    )
   }
 }
 

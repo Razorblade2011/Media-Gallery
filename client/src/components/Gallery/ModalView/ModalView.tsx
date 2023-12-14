@@ -10,8 +10,13 @@ const ModalView = () => {
 
   const staticPath = import.meta.env.VITE_API_STATIC
 
+  let timer: any
+
   const onVolumeChange = async (e: any) => {
-    dispatch(setUserVideoVolume(e.target.volume as number))
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      dispatch(setUserVideoVolume(e.target.volume as number))
+    }, 7000)
   }
 
   const setVolume = async (e: any) => {
