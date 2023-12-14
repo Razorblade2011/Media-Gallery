@@ -92,13 +92,7 @@ class MediaService {
   }
 
   // создаёт файл
-  async createMediaFile(
-    file,
-    type,
-    userId,
-    author = 'test',
-    tags = [1, 2, 3, 4]
-  ) {
+  async createMediaFile(file, type, userId, author, tags) {
     const DIR_NAME = process.cwd()
     const name = `${parse(file.name).name}-${Date.now()}${extname(file.name)}`
     if (type === 'video') {

@@ -54,7 +54,7 @@ const initialState: InintialState = {
   page: 1,
   limit: 10,
   sort: 'createdAt',
-  way: 1,
+  way: -1,
   search: '',
   activePage: 1,
   pageCount: 0,

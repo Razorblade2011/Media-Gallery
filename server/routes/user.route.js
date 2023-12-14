@@ -15,5 +15,6 @@ userRouter.post('/login', userConroller.login)
 userRouter.post('/updatePassword', userConroller.updatePassword)
 userRouter.post('/updateAvatar', userConroller.updateAvatar)
 userRouter.post('/logout', userConroller.logout)
+userRouter.post('/volume', userConroller.setVolume)
 
 export default userRouter
