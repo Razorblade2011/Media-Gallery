@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@types/ffprobe": "^1.1.7",
-    "@types/fluent-ffmpeg": "^2.1.23"
+    "@types/fluent-ffmpeg": "^2.1.23",
+    "nodemon": "^3.0.2"
   }
 }

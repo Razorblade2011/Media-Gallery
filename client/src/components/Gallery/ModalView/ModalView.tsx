@@ -10,7 +10,7 @@ const ModalView = () => {
 
   const staticPath = import.meta.env.VITE_API_STATIC
 
-  let timer: any
+  let timer: ReturnType<typeof setTimeout>
 
   const onVolumeChange = async (e: any) => {
     clearTimeout(timer)
