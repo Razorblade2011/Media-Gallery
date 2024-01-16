@@ -2,22 +2,28 @@ import { useAppDispatch, useAppSelector } from '../../../redux/reduxHooks'
 import { ChangeEvent, useRef, useState } from 'react'
 import styles from './UserDashboard.module.scss'
 import {
+  changeName,
+  checkName,
   setAuthError,
   setMessage,
+  setNameAvailabilityToUnknown,
   updateAvatar,
 } from '../../../redux/features/authSlice'
 import { updatePassword } from '../../../redux/features/authSlice'
 import MessageBox from '../../MessageBox/MessageBox'
 
 const UserDashboard = () => {
+  const { user, message, nameAvailability } = useAppSelector(
+    (state) => state.authReducer
+  )
+
+  const [newName, setNewName] = useState(user.name)
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [reNewPassword, setReNewPassword] = useState('')
   const [newAvatar, setNewAvatar] = useState<File | null>(null)
 
   const newAvatarRef = useRef<HTMLInputElement>(null)
-
-  const { user, message } = useAppSelector((state) => state.authReducer)
 
   const dispatch = useAppDispatch()
 
@@ -52,6 +58,23 @@ const UserDashboard = () => {
     setTimeout(() => dispatch(setMessage('')), 5000)
   }
 
+  const checkNameFunc = () => {
+    dispatch(checkName(newName))
+  }
+
+  const changeNameFunc = () => {
+    if (nameAvailability === 'Имя свободно') {
+      dispatch(changeName({ userId: user.id, newUserName: newName }))
+      dispatch(setNameAvailabilityToUnknown())
+    }
+  }
+
+  const nameAvailable = () => {
+    if (nameAvailability === 'Имя свободно') return styles.avalible
+    if (nameAvailability === 'Имя занято') return styles.unavalible
+    if (nameAvailability === 'Неизвестно') return ''
+  }
+
   return (
     <div className={styles.userdashboard}>
       <div className={styles.userName}>
@@ -83,6 +106,18 @@ const UserDashboard = () => {
       <div className={styles.email}>
         <div>Адрес почты:</div>
         <div>{user.email}</div>
+      </div>
+      <div className={styles.changeUserName}>
+        <div>
+          <input
+            className={`${styles.nameInput} ${nameAvailable()}`}
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            type="text"
+          />
+          <button onClick={checkNameFunc}>Проверить имя</button>
+        </div>
+        <button onClick={changeNameFunc}>Изменить имя</button>
       </div>
       <div className={styles.changePassword}>
         <div>Сменить пароль</div>

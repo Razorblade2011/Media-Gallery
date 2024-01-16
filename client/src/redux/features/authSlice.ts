@@ -5,6 +5,7 @@ import {
   UserDataRegister,
   UserDataUpdatePassword,
   UserI,
+  nameAvailableResponse,
 } from '../types'
 import { RootState } from '../store'
 import { AxiosError, isAxiosError } from 'axios'
@@ -15,6 +16,7 @@ interface InitialState {
   loading: boolean
   message: string
   error: string
+  nameAvailability: nameAvailableResponse
   showAvatarMenu: boolean
 }
 
@@ -38,6 +40,7 @@ const initialState: InitialState = {
   loading: false,
   message: '',
   error: '',
+  nameAvailability: 'Неизвестно',
   showAvatarMenu: false,
 }
 
@@ -113,6 +116,37 @@ export const updatePassword = createAsyncThunk(
   }
 )
 
+export const checkName = createAsyncThunk(
+  'auth/checkName',
+  async (userName: string, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await AuthService.checkName(userName)
+      setTimeout(() => {
+        dispatch(setMessage(''))
+      }, 5000)
+      return response
+    } catch (e) {
+      return rejectWithValue(e as ErrorAxios)
+    }
+  }
+)
+
+export const changeName = createAsyncThunk(
+  'auth/changeName',
+  async (
+    { userId, newUserName }: { userId: string; newUserName: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await AuthService.changeName(userId, newUserName)
+      console.log(response)
+      return response
+    } catch (e) {
+      return rejectWithValue(e as ErrorAxios)
+    }
+  }
+)
+
 export const logoutUser = createAsyncThunk<void>(
   'auth/logoutUser',
   async () => {
@@ -171,6 +205,9 @@ export const auth = createSlice({
     },
     setMessage: (state, { payload }) => {
       state.message = payload
+    },
+    setNameAvailabilityToUnknown: (state) => {
+      state.nameAvailability = 'Неизвестно'
     },
     setShowAvatarMenu: (state, { payload }) => {
       state.showAvatarMenu = payload
@@ -231,6 +268,26 @@ export const auth = createSlice({
         state.error = payload.response.data.message
       })
 
+      // checkName
+      .addCase(checkName.fulfilled, (state, { payload }: any) => {
+        state.message = payload.data
+        state.nameAvailability = payload.data
+        state.error = ''
+      })
+      .addCase(checkName.rejected, (state, { payload }: any) => {
+        state.error = payload.response.data.message
+      })
+
+      // changeName
+      .addCase(changeName.fulfilled, (state, { payload }: any) => {
+        state.message = payload.data.message
+        state.user = payload.data.user
+        state.error = ''
+      })
+      .addCase(changeName.rejected, (state, { payload }: any) => {
+        state.error = payload.response.data.message
+      })
+
       // updateAvatar
       .addCase(updateAvatar.pending, (state) => {
         state.loading = true
@@ -276,6 +333,7 @@ export const {
   setAuthFalse,
   setAuth,
   setAuthError,
+  setNameAvailabilityToUnknown,
   setShowAvatarMenu,
   setVolume,
 } = auth.actions

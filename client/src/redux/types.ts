@@ -60,3 +60,5 @@ export interface UserI {
     objectPerPage: number
   }
 }
+
+export type nameAvailableResponse = 'Имя свободно' | 'Имя занято' | 'Неизвестно'

@@ -167,16 +167,19 @@ class UserService {
       $addToSet: { files: { $in: mediaIds } },
     })
   }
+
   // удаляет информацию о файле у пользователя
   async removeMediaFromUser(userId, mediaId) {
     return UserModel.updateOne({ _id: userId }, { $pull: { files: mediaId } })
   }
+
   // удаляет информацию о файлах у пользователя
   async removeMediaFilesFromUser(userId, mediaIds) {
     return UserModel.findByIdAndUpdate(userId, {
       $pull: { files: { $in: mediaIds } },
     })
   }
+
   // изменяет запись о громкости звука
   async setVolume(id, volume) {
     return UserModel.findByIdAndUpdate(
@@ -188,6 +191,21 @@ class UserService {
       },
       { new: true }
     )
+  }
+
+  // проверяет наличие пользователя по имени
+  async checkName(userName) {
+    return UserModel.findOne({ name: userName })
+  }
+
+  // изменяет имя пользователя
+  async changeName(id, userName) {
+    await UserModel.findByIdAndUpdate(id, {
+      $set: { name: userName },
+    })
+    const user = await UserModel.findById(id)
+    const userDto = new UserDto(user)
+    return userDto
   }
 }
 

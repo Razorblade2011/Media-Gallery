@@ -30,6 +30,21 @@ export default class AuthService {
     return await $api.post<AuthResponse>('/users/registration', formData)
   }
 
+  static async checkName(userName: string) {
+    return await $api.get('/users/checkName', {
+      params: {
+        name: userName,
+      },
+    })
+  }
+
+  static async changeName(userId: string, newUserName: string) {
+    return await $api.post('/users/changeName', {
+      id: userId,
+      name: newUserName,
+    })
+  }
+
   static async updatePassword(
     email: string,
     oldPassword: string,
