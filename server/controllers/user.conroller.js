@@ -105,6 +105,7 @@ class UserController {
       next(error)
     }
   }
+
   // изменение громкости звука
   async setVolume(req, res, next) {
     try {
@@ -112,6 +113,32 @@ class UserController {
       const user = await userService.setVolume(id, volume)
       const { videoVolume } = user.settings
       return res.status(200).json(videoVolume)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  // проверка имени пользователя
+  async checkName(req, res, next) {
+    try {
+      const { name } = req.query
+      const user = await userService.checkName(name)
+      if (!user) {
+        return res.status(200).json('Имя свободно')
+      } else {
+        return res.status(200).json('Имя занято')
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  // смена имени пользователя
+  async changeName(req, res, next) {
+    try {
+      const { id, name } = req.body
+      const user = await userService.changeName(id, name)
+      return res.status(200).json({ message: 'Имя изменено', user })
     } catch (error) {
       next(error)
     }
